@@ -5,8 +5,8 @@ import { CognitiveGame } from '../../../engines/progressive.js';
 export function mountGame() {
   const G = CognitiveGame;
   const VERSION = currentGame().version;
-  const CHARACTERS = [...'QERSDFGJKLCBP23457@%&'];
-  const RECORDED_CHARACTERS = new Set([...CHARACTERS, 'N', 'Z']);
+  const CHARACTERS = [...'2457QRPSFGJL@&%?'];
+  const RECORDED_CHARACTERS = new Set([...CHARACTERS, ...'3BCDEKNZ']);
   const DEADLINE = 5000,
     EXPOSURE = 1000,
     GAP = 500,
