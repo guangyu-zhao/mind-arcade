@@ -26,6 +26,11 @@
       "version": "202610170003",
       "file": "202610170003_population_recent_five.sql",
       "sha256": "7e1c9b61cda97883307a4e734ca83c0c1c944d9aef7b8e73adb0a7713ec94399"
+    },
+    {
+      "version": "202610220001",
+      "file": "202610220001_rotation_characters.sql",
+      "sha256": "490ad09d00c929b38cc9f459a4b30221d3637e22bd44c58e2cba0bafcd019ccb"
     }
   ]
 }

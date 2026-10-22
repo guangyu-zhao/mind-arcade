@@ -6,7 +6,7 @@ begin
   for item in select * from (values
       ('mind_lab_private.new_user','33adb11e5e3bbde7acce4d5254e7d1d4'),
       ('mind_lab_private.condition_id','478fcc612cf0aa9dde56dc74184baeaa'),
-      ('mind_lab_private.level_pass','b326418b75cfe12473015088161686dc'),
+      ('mind_lab_private.level_pass','c772793b44f00875b14b783c59798a8d'),
       ('public.ml_submit','e0b1cf08f685f3081c13cef85ab1c0f1'),
       ('mind_lab_private.histogram','70700c062b65d5ab522aab95e9d9b823')
     ) as expected(name,hash)
@@ -30,7 +30,8 @@ insert into supabase_migrations.schema_migrations(version,name,statements) value
  ('202610160001','cloud_scores',array[]::text[]),
  ('202610160002','simplify_statistics',array[]::text[]),
  ('202610170001','fix_tracking_score_validation',array[]::text[]),
- ('202610170002','current_rules',array[]::text[])
+ ('202610170002','current_rules',array[]::text[]),
+ ('202610220001','rotation_characters',array[]::text[])
 on conflict (version) do nothing;
 insert into supabase_migrations.schema_migrations(version,name,statements)
   select '202610170003','population_recent_five',array[]::text[] from pg_proc
