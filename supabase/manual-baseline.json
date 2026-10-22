@@ -36,6 +36,11 @@
       "version": "202610230001",
       "file": "202610230001_validate_judgment_counts.sql",
       "sha256": "b8013628c2d8feb66ca4c1c79a563e90f8098fc64a8910548239731df6f12015"
+    },
+    {
+      "version": "202610230002",
+      "file": "202610230002_validate_updating_tracking.sql",
+      "sha256": "d111d272ebdf8442e7df7b5e8a08b6cd0d117af6902ce3fe1e51f8df5cacd8ca"
     }
   ]
 }

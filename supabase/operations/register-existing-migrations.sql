@@ -6,7 +6,8 @@ begin
   for item in select * from (values
       ('mind_lab_private.new_user','33adb11e5e3bbde7acce4d5254e7d1d4'),
       ('mind_lab_private.condition_id','478fcc612cf0aa9dde56dc74184baeaa'),
-      ('mind_lab_private.level_pass','6ff80ae43d991a4f8332488a4b04e8f0'),
+      ('mind_lab_private.valid_integer','c6d09b35cdf7bff53eb25f4dcb651f66'),
+      ('mind_lab_private.level_pass','817185831a42f2e2f9c1c5f0dd7100c0'),
       ('public.ml_submit','e0b1cf08f685f3081c13cef85ab1c0f1'),
       ('mind_lab_private.histogram','70700c062b65d5ab522aab95e9d9b823')
     ) as expected(name,hash)
@@ -32,7 +33,8 @@ insert into supabase_migrations.schema_migrations(version,name,statements) value
  ('202610170001','fix_tracking_score_validation',array[]::text[]),
  ('202610170002','current_rules',array[]::text[]),
  ('202610220001','rotation_characters',array[]::text[]),
- ('202610230001','validate_judgment_counts',array[]::text[])
+ ('202610230001','validate_judgment_counts',array[]::text[]),
+ ('202610230002','validate_updating_tracking',array[]::text[])
 on conflict (version) do nothing;
 insert into supabase_migrations.schema_migrations(version,name,statements)
   select '202610170003','population_recent_five',array[]::text[] from pg_proc

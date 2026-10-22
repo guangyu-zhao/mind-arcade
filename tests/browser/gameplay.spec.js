@@ -236,6 +236,13 @@ for (const gameId of ['schulte-table', 'flanker', 'choice-reaction', 'symbol-sea
     await expect(page.locator('body')).not.toHaveClass(/running/);
     await expect(page.locator('#result-note')).toHaveText('本局已取消，未记录。');
     expect(
-      await page.evaluate((id) => localStorage.getItem(`mind-arcade.records.${id}`), gameId),
-    ).toBeNull();
+      await page.evaluate(
+        (id) =>
+          Object.keys(localStorage).filter(
+            (key) =>
+              key === `mind-arcade.records.${id}` || key.startsWith(`mind-arcade.records.${id}:`),
+          ),
+        gameId,
+      ),
+    ).toEqual([]);
   });
