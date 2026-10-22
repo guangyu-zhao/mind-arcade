@@ -41,6 +41,10 @@
   匿名场次不会因中途登录而归入账户，恢复当前记录也不会重复提交。
   全局分布：在当前玩法下，每个账号最近 5 局的平均分作为一个数据点；不足 5 局使用已有成绩。
   个人分布和历史曲线使用本人在当前玩法下的全部云端成绩。
+  局末比较按场次开始时的账号和玩法隔离，并参考当时已加载的个人云端历史。
+  缩放与屏幕尺寸不拆分玩法；云端历史未加载时不宣称刷新最高分。
+  本地记录逐条验证，损坏条目隔离到同名 .quarantine 键，保留其余成绩。
+  收藏存于当前浏览器的 mind-arcade.favorites，不上传到账户。
 
 配置与发布
   .env.example 仅包含允许公开的 URL 和 publishable key。机密密钥不能使用 VITE_ 前缀。
@@ -63,6 +67,7 @@
   之后在本机通过 Supabase CLI 登录并 link 到 yjzdcjiuiddhvwmcwmms；
   先查看 migration list 和 db push --dry-run，再按实际变更执行 db push。
   数据库测试覆盖各类等级任务的校验，并验证多物体追踪可以保存成绩。
+  rotation-characters.sql 覆盖前端当前生成的全部字符，防止字符池和后端校验不同步。
   population.sql 验证每人最近五局均分、玩法隔离、个人完整历史与匿名访问边界。
 
 当前规则更新
@@ -73,3 +78,12 @@
   202610170003_population_recent_five.sql 将全局分布改为每个账号最近 5 局的均分。
   已由用户确认在生产项目执行，公开查询已返回新口径；全部成绩保留。
   前端仅在查询返回 recent-five-mean 口径时展示全局图，防止旧查询被误标为人数。
+
+旋转广度校验更新
+  202610220001_rotation_characters.sql 为后端校验补充 ?，不改动已有成绩。
+  本地验证已通过；生产执行状态以 manual-baseline.json 中的用户确认记录为准。
+
+任务设计资料
+  空间更新：https://pmc.ncbi.nlm.nih.gov/articles/PMC9313590/
+  数字更新：https://www.sciencedirect.com/science/article/pii/S0022249622000487
+  多路末尾记忆：https://englelab.gatech.edu/articles/2010/broadway-engle-2010.pdf

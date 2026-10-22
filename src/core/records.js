@@ -1,4 +1,4 @@
-import { copyOwnership } from './lifecycle.js';
+import { copyOwnership, comparisonHistory } from './lifecycle.js';
 /** @param {...Array<import('./types.js').ScoreRecord>} groups */
 function mergeRecords(...groups) {
   const unique = new Map();
@@ -9,9 +9,42 @@ function mergeRecords(...groups) {
   return [...unique.values()].sort((a, b) => a.endedAt.localeCompare(b.endedAt));
 }
 
+function readRecords(key, validate, storage = globalThis.localStorage) {
+  const raw = storage.getItem(key);
+  if (!raw) return [];
+  let values;
+  try {
+    values = JSON.parse(raw);
+  } catch {
+    values = raw;
+  }
+  const clean = [],
+    rejected = [];
+  for (const value of Array.isArray(values) ? values : [values]) {
+    try {
+      clean.push(...validate([value]));
+    } catch {
+      rejected.push(value);
+    }
+  }
+  if (rejected.length) {
+    try {
+      const backup = JSON.stringify(rejected.slice(-20));
+      storage.setItem(
+        `${key}.quarantine`,
+        backup.length <= 200000 ? backup : JSON.stringify({ truncated: backup.slice(0, 200000) }),
+      );
+    } catch {}
+    try {
+      storage.setItem(key, JSON.stringify(clean));
+    } catch {}
+  }
+  return mergeRecords(clean);
+}
+
 function saveRecords(key, records, validate) {
   const incoming = validate(records);
-  const existing = validate(JSON.parse(localStorage.getItem(key) || '[]'));
+  const existing = readRecords(key, validate);
   const merged = mergeRecords(incoming, existing);
   localStorage.setItem(key, JSON.stringify(merged));
   return merged;
@@ -50,6 +83,10 @@ function readMeta(meta) {
       ['width', 'height', 'viewportWidth', 'viewportHeight', 'dpr', 'scale'].map((k) => [k, d[k]]),
     ),
     inputTypes: [...new Set(meta.inputTypes)].sort(),
+    ...(Object.hasOwn(meta, 'ownerId') &&
+    (meta.ownerId === null || (typeof meta.ownerId === 'string' && meta.ownerId.length <= 128))
+      ? { ownerId: meta.ownerId }
+      : {}),
   };
   copyOwnership(meta, clean);
   return clean;
@@ -57,13 +94,20 @@ function readMeta(meta) {
 
 function conditionKey(meta) {
   if (!meta) return 'unknown';
-  const d = meta.display;
   return JSON.stringify([
     meta.rulesVersion,
     Object.entries(meta.rules).sort(([a], [b]) => a.localeCompare(b)),
-    Math.round(d.width / 10) * 10,
-    d.scale,
-    d.dpr,
   ]);
 }
-export { mergeRecords, saveRecords, readMeta, conditionKey };
+function previousRecords(records, meta) {
+  const remote = comparisonHistory(meta);
+  if (remote === null) return [];
+  const own = records.filter(
+    (record) =>
+      Object.hasOwn(record.meta || {}, 'ownerId') &&
+      record.meta.ownerId === meta.ownerId &&
+      conditionKey(record.meta) === conditionKey(meta),
+  );
+  return [...own, ...remote].sort((a, b) => a.endedAt.localeCompare(b.endedAt));
+}
+export { mergeRecords, readRecords, saveRecords, readMeta, conditionKey, previousRecords };

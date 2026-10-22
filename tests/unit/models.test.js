@@ -184,6 +184,33 @@ test('reaction scoring excludes premature responses and retains omissions and no
   ]);
   assert.equal(go.score, 1);
 });
+test('reaction targets remain independent and PVT waiting budgets stay balanced', () => {
+  const random = seeded(23);
+  for (const kind of ['choice', 'gonogo']) {
+    const values = Array.from({ length: 10000 }, () => reaction.nextTarget(kind, random));
+    const fraction = values.reduce((a, b) => a + b, 0) / values.length;
+    assert.ok(Math.abs(fraction - (kind === 'choice' ? 0.5 : 0.25)) < 0.02);
+    assert.ok(
+      values.some((value, i) => i > 3 && values.slice(i - 3, i + 1).every((v) => v === value)),
+    );
+  }
+  const scores = new Set();
+  for (let game = 0; game < 1000; game++) {
+    let balance = 0,
+      elapsed = 0,
+      score = 0;
+    while (elapsed < 30000) {
+      const next = reaction.nextWait('pvt', balance, random);
+      assert.ok(next.waitMs >= 1000 && next.waitMs <= 3000);
+      assert.ok(Math.abs(next.balance) <= 750.000001);
+      balance = next.balance;
+      elapsed += next.waitMs + 200;
+      if (elapsed < 30000) score++;
+    }
+    scores.add(score);
+  }
+  assert.deepEqual([...scores].sort(), [13]);
+});
 
 test('picture bank retains every original object and unique drawing after module loading', async () => {
   const { createPictureBank } =

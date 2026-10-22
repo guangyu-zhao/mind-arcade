@@ -14,6 +14,7 @@ export function createScoreQueue({
     flushing = false,
     error = '',
     timer,
+    latest = null,
     disposed = false;
   try {
     storage ??= globalThis.localStorage;
@@ -38,6 +39,7 @@ export function createScoreQueue({
   }
   function store(key, item) {
     memory.set(key, item);
+    if (latest?.key === key) latest.status = item.error ? 'failed' : 'pending';
     try {
       storage.setItem(key, JSON.stringify(item));
     } catch {
@@ -77,6 +79,7 @@ export function createScoreQueue({
           unavailable = true;
         }
         uploaded = true;
+        if (latest?.key === key) latest.status = 'synced';
         if (account.state.epoch === epoch) error = '';
       }
     } catch {
@@ -101,6 +104,7 @@ export function createScoreQueue({
         flushing,
         error,
         unavailable,
+        latest: latest?.owner === account.state.user?.id ? latest : null,
       };
     },
     submit(game, record, owner) {
@@ -112,11 +116,17 @@ export function createScoreQueue({
         (record.status === 'stopped' && !record.trials?.length)
       )
         return;
-      store(`${pendingPrefix}${owner}:${game}:${record.id}`, { owner, game, record });
+      const key = `${pendingPrefix}${owner}:${game}:${record.id}`;
+      latest = { key, owner, status: 'pending' };
+      store(key, { owner, game, record });
       onChange();
       void flush();
     },
     flush,
+    begin() {
+      latest = null;
+      onChange();
+    },
     retry() {
       for (const [key, item] of entries()) {
         delete item.error;

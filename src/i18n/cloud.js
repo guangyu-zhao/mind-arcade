@@ -38,5 +38,8 @@ const words = {
   loading: 'cloud.loading',
   sessionExpired: 'cloud.your-session-expired-sign-in-again-pending-scores-are-retained',
   keepOpen: 'cloud.local-buffering-is-unavailable-complete-syncing-before-closing-th',
+  'save-synced': 'cloud.save-synced',
+  'save-pending': 'cloud.save-pending',
+  'save-failed': 'cloud.save-failed',
 };
 export const text = (key) => (words[key] ? Text.t(words[key]) : key);

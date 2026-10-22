@@ -22,6 +22,12 @@ export function mountCloudView({ game, account, queue, statistics, isRunning, re
     frame,
     afterGame = false;
   const charts = game ? createCharts(game.metric) : null;
+  const savedStatus = game ? element('p', 'cloud-save-status') : null;
+  if (savedStatus) {
+    savedStatus.hidden = true;
+    savedStatus.setAttribute('role', 'status');
+    document.getElementById('result-note')?.after(savedStatus);
+  }
   function renderAccount() {
     const { user, profile, ready } = account.state;
     accountButton.textContent = user
@@ -36,6 +42,12 @@ export function mountCloudView({ game, account, queue, statistics, isRunning, re
   function renderStatus() {
     if (!statusNode) return;
     const { waiting, failed, flushing, error, unavailable } = queue.state;
+    if (savedStatus) {
+      const latest = queue.state.latest;
+      savedStatus.hidden = !latest;
+      savedStatus.dataset.state = latest?.status || '';
+      savedStatus.textContent = latest ? text(`save-${latest.status}`) : '';
+    }
     const messages = [];
     if (flushing) messages.push(text('syncing'));
     else if (waiting) messages.push(`${waiting} ${text('pending')}`);
@@ -163,6 +175,7 @@ export function mountCloudView({ game, account, queue, statistics, isRunning, re
       dialog.dispose();
       accountBox.remove();
       panels?.remove();
+      savedStatus?.remove();
     },
   };
 }

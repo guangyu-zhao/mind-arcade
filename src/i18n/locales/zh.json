@@ -631,5 +631,19 @@
   "rules.rotation-intro": "判断旋转字符，记住箭头",
   "ui.local-storage-unavailable": "无法保存本地记录。",
   "ui.local-result-kept-on-page": "本地记录暂存于本页。",
-  "ui.cancel-round": "取消本局"
+  "ui.cancel-round": "取消本局",
+  "cloud.save-synced": "已同步到云端",
+  "cloud.save-pending": "等待同步",
+  "cloud.save-failed": "同步失败，可在下方重试",
+  "cloud.sample-players": "玩家：{n} 人",
+  "cloud.sample-runs": "记录：{n} 次",
+  "span.review-title": "判断错题回看 · {n}",
+  "span.review-item": "第 {level} 级 · 第 {n} 题",
+  "span.review-your-answer": "你的回答：{answer}",
+  "span.review-expected": "正确答案：{answer}",
+  "span.review-timeout": "未作答",
+  "home.favorites": "常用",
+  "home.add-favorite": "收藏 {name}",
+  "home.remove-favorite": "取消收藏 {name}",
+  "home.favorites-empty": "点击星标收藏游戏。"
 }

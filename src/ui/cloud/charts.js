@@ -16,12 +16,13 @@ export function createCharts(metric) {
       }) + (unit && m.unit ? ` ${m.unit}` : '')
     );
   }
-  function chartLabels(chart, vertical, horizontal, points) {
+  function chartLabels(chart, vertical, horizontal, points, sample) {
     const figure = element('figure', 'cloud-figure');
     figure.append(
       element('div', 'cloud-axis-label', vertical),
       chart,
       element('figcaption', 'cloud-axis-label cloud-axis-bottom', horizontal),
+      element('p', 'cloud-sample-size', sample),
     );
     const detail = element('output', 'cloud-chart-detail');
     detail.hidden = true;
@@ -162,7 +163,15 @@ export function createCharts(metric) {
         format(bins.at(-1).high, false, decimals),
       ),
     );
-    return chartLabels(chart, text(count), horizontal, points);
+    return chartLabels(
+      chart,
+      text(count),
+      horizontal,
+      points,
+      Text.t(count === 'players' ? 'cloud.sample-players' : 'cloud.sample-runs', {
+        n: formatCount(bins.reduce((sum, bin) => sum + bin.count, 0)),
+      }),
+    );
   }
   function trend(rows, container) {
     if (!rows.length) return labeled('p', 'noScores', 'cloud-empty');
@@ -225,7 +234,13 @@ export function createCharts(metric) {
         svg('text', { x: left, y: 243 }, date(first)),
         svg('text', { x: right, y: 243, 'text-anchor': 'end' }, date(last)),
       );
-    return chartLabels(chart, metricLabel(), text('time'), points);
+    return chartLabels(
+      chart,
+      metricLabel(),
+      text('time'),
+      points,
+      Text.t('cloud.sample-runs', { n: formatCount(rows.length) }),
+    );
   }
   return {
     histogram,

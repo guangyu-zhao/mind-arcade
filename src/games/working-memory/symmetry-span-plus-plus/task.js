@@ -432,6 +432,50 @@ export function mountGame() {
     validateTrial,
     validateContext,
     feedback,
+    describeJudgment(ctx, item, trial) {
+      const size = trial.rules.size,
+        positions = item.frames.map((frame) => frame.target),
+        expected = ['top-bottom', 'left-right', 'neither'].filter((axis) =>
+          R.accepts(positions, axis, size),
+        ),
+        label = (axis) =>
+          ({ 'top-bottom': 'topBottom', 'left-right': 'leftRight', neither: 'asymmetric' })[axis];
+      const drawing = ctx.svg('svg', { viewBox: '0 0 320 320', 'aria-hidden': 'true' });
+      for (let index = 0; index < size * size; index++) {
+        const step = positions.indexOf(index),
+          cellSize = 288 / size,
+          x = 16 + (index % size) * cellSize,
+          y = 16 + Math.floor(index / size) * cellSize;
+        drawing.append(
+          ctx.svg('rect', {
+            x,
+            y,
+            width: cellSize - 3,
+            height: cellSize - 3,
+            rx: 4,
+            fill: step < 0 ? '#eeecf3' : colors[trial.targetColor],
+          }),
+        );
+        if (step >= 0) {
+          const number = ctx.svg('text', {
+            x: x + (cellSize - 3) / 2,
+            y: y + cellSize / 2,
+            'text-anchor': 'middle',
+            'dominant-baseline': 'central',
+            'font-size': 24,
+            fill: ['yellow', 'pink'].includes(trial.targetColor) ? '#30313b' : '#fff',
+          });
+          number.textContent = String(step + 1);
+          drawing.append(number);
+        }
+      }
+      return {
+        correct: expected.includes(item.response),
+        answer: item.timedOut ? 'reviewTimeout' : label(item.response),
+        expected: expected.map(label),
+        drawing,
+      };
+    },
 
     validateSession(trials, meta) {
       if (!meta || meta.rulesVersion !== VERSION) throw Error('session rules');

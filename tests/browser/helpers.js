@@ -16,11 +16,12 @@ export async function fixturePage(page, game, params = 'fixture=cloud') {
   await page.goto(`${game.route}/?${params}`);
   await page.locator('html[data-fixture-ready="true"]').waitFor({ state: 'attached' });
 }
-export async function signedIn(page, id = 'alice') {
+export async function signedIn(page, id = 'alice', pausedClock = false) {
   await page.locator('html[data-fixture-ready="true"]').waitFor({ state: 'attached' });
   await page.evaluate((id) => {
     window.fixture.state.session(id);
     window.fixture.state.resolveSession({ data: { session: null } });
   }, id);
+  if (pausedClock) await page.clock.runFor(1);
   await expect.poll(() => page.evaluate(() => window.fixture.service.userId)).toBe(id);
 }

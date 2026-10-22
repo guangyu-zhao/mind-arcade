@@ -27,7 +27,6 @@ export function mountGame() {
   let lastClock = '';
   let records = [];
 
-  let storageWritable = true;
   const timers = new Set();
 
   const shuffle = Core.shuffle;
@@ -90,24 +89,18 @@ export function mountGame() {
     }, 6500);
   }
   function storageFailed() {
-    storageWritable = false;
-
     notify('ui.local-storage-unavailable');
   }
   function loadData() {
     try {
-      records = mergeRecords(
-        validateRecords(JSON.parse(localStorage.getItem(RECORDS_KEY) || '[]')),
-      );
+      records = mergeRecords(Core.readRecords(RECORDS_KEY, validateRecords));
     } catch {
       storageFailed();
     }
   }
   function persistRecords() {
-    if (!storageWritable) return false;
     try {
       records = Core.saveRecords(RECORDS_KEY, records, validateRecords);
-      storageWritable = true;
 
       return true;
     } catch {
@@ -479,9 +472,7 @@ export function mountGame() {
     I18n.text($('final-score'), String(session.correct));
     I18n.text($('board-hint'), '');
     I18n.text($('attempt-count'), '');
-    const previous = records
-      .filter((record) => record.duration === session.duration)
-      .filter((record) => history.compatible(record, session.meta));
+    const previous = Core.previousRecords(records, session.meta);
     const last = previous.at(-1);
     const best = previous.reduce((value, record) => Math.max(value, record.score), -Infinity);
     const record = {
@@ -613,7 +604,7 @@ export function mountGame() {
   window.addEventListener('storage', (event) => {
     if (event.key !== RECORDS_KEY || !event.newValue) return;
     try {
-      records = mergeRecords(records, validateRecords(JSON.parse(event.newValue)));
+      records = mergeRecords(records, Core.readRecords(RECORDS_KEY, validateRecords));
       history.updateContext();
     } catch {}
   });

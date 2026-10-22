@@ -16,7 +16,7 @@ export function mountGame() {
   const defaultSettings = { size: 5, direction: 'asc', disappear: false };
   let settings = { ...defaultSettings };
   let records = [];
-  let storageWritable = true;
+
   let phase = 'idle';
   let round = null;
   let pointerAnswer = null;
@@ -93,8 +93,6 @@ export function mountGame() {
   }
 
   function storageFailed() {
-    storageWritable = false;
-
     notify('ui.local-storage-unavailable');
   }
 
@@ -106,8 +104,7 @@ export function mountGame() {
         settings = { size: parsed.size, direction: parsed.direction, disappear: parsed.disappear };
     } catch {}
     try {
-      const stored = localStorage.getItem(RECORDS_KEY);
-      records = mergeRecords(validateRecords(stored ? JSON.parse(stored) : []));
+      records = mergeRecords(Core.readRecords(RECORDS_KEY, validateRecords));
     } catch {
       storageFailed();
     }
@@ -142,10 +139,8 @@ export function mountGame() {
   });
 
   function persistRecords() {
-    if (!storageWritable) return false;
     try {
       records = Core.saveRecords(RECORDS_KEY, records, validateRecords);
-      storageWritable = true;
 
       return true;
     } catch {
@@ -154,13 +149,6 @@ export function mountGame() {
     }
   }
 
-  function matchesMode(record) {
-    return (
-      record.size === settings.size &&
-      record.direction === settings.direction &&
-      record.disappear === settings.disappear
-    );
-  }
   function targetNumber() {
     return settings.direction === 'asc' ? completed + 1 : settings.size ** 2 - completed;
   }
@@ -329,9 +317,7 @@ export function mountGame() {
     I18n.text($('timer-label'), 'ui.time-remaining');
     I18n.text($('action-label'), 'ui.play-again');
     $('action-icon').removeAttribute('hidden');
-    const previous = records
-      .filter(matchesMode)
-      .filter((record) => history.compatible(record, round.meta));
+    const previous = Core.previousRecords(records, round.meta);
     const best = previous.reduce((value, record) => Math.max(value, record.score), -1);
     const record = {
       meta: history.finish(round.meta),
@@ -454,7 +440,7 @@ export function mountGame() {
   window.addEventListener('storage', (event) => {
     if (event.key !== RECORDS_KEY || !event.newValue) return;
     try {
-      records = mergeRecords(records, validateRecords(JSON.parse(event.newValue)));
+      records = mergeRecords(records, Core.readRecords(RECORDS_KEY, validateRecords));
       history.updateContext();
     } catch {}
   });

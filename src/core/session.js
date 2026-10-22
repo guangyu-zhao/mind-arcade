@@ -1,4 +1,4 @@
-import { readMeta, conditionKey } from './records.js';
+import { readMeta } from './records.js';
 import { beginRecord, finishRecord, updateScoreContext } from './lifecycle.js';
 export function createHistory({ version, rules, display, interrupt }) {
   let activeMeta = null,
@@ -76,9 +76,6 @@ export function createHistory({ version, rules, display, interrupt }) {
     },
     { capture: true },
   );
-  function compatible(record, meta = current()) {
-    return conditionKey(record.meta) === conditionKey(meta);
-  }
   function update() {
     updateScoreContext(current());
   }
@@ -104,7 +101,6 @@ export function createHistory({ version, rules, display, interrupt }) {
     finish,
     cancel,
     checkTiming,
-    compatible,
     updateContext: update,
   };
 }

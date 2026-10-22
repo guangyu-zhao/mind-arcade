@@ -67,7 +67,7 @@
   border-radius: 16px;
 }
 .color-name {
-  font-size: 28px;
+  font-size: calc(22px / var(--display-scale, 1));
   font-weight: 600;
 }
 .span-grid {
@@ -97,8 +97,5 @@
     width: 54px;
     height: 54px;
     border-radius: 12px;
-  }
-  .color-name {
-    font-size: 22px;
   }
 }

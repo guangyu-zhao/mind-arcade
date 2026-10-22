@@ -29,6 +29,20 @@ if (params.get('fixture') === 'visual') {
     random: () => 0.6,
   });
 } else {
+  if (params.get('fixture') === 'progressive') {
+    const { CognitiveGame } = await import('../../src/engines/progressive.js');
+    const init = CognitiveGame.init;
+    CognitiveGame.init = (config) => {
+      window.fixture.task = config;
+      init({
+        ...config,
+        run(ctx, plan) {
+          window.fixture.context = ctx;
+          return config.run(ctx, plan);
+        },
+      });
+    };
+  }
   const { mountGame } = await import(/* @vite-ignore */ '/mind-arcade/' + game.assets.entry);
   mountGame();
 }

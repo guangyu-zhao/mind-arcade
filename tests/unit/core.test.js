@@ -66,33 +66,47 @@ test('record metadata preserves unknown conditions and rejects invalid imports',
   assert.throws(() => Core.readMeta(badRules));
   const resized = meta();
   resized.display.scale = 60;
-  assert.notEqual(Core.conditionKey(resized), Core.conditionKey(meta()));
+  assert.equal(Core.conditionKey(resized), Core.conditionKey(meta()));
+  const otherRules = meta();
+  otherRules.rules.order = 'forward';
+  assert.notEqual(Core.conditionKey(otherRules), Core.conditionKey(meta()));
   const revised = meta();
   revised.rulesVersion = 'span-3';
   assert.notEqual(Core.conditionKey(revised), Core.conditionKey(meta()));
   assert.notEqual(Core.conditionKey(null), Core.conditionKey(meta()));
 });
-test('merging is idempotent and invalid storage is preserved', () => {
+test('damaged records are isolated without blocking valid history or future saves', () => {
   const a = { id: 'a', endedAt: '2026-01-01', score: 1 },
     b = { id: 'b', endedAt: '2026-01-02', score: 2 };
   assert.deepEqual(Core.mergeRecords([b], [a, b]), [a, b]);
-  let raw = 'broken';
+  const values = new Map([['records', 'broken']]);
   global.localStorage = {
-    getItem: () => raw,
-    setItem: (_, value) => {
-      raw = value;
-    },
+    getItem: (key) => values.get(key) ?? null,
+    setItem: (key, value) => values.set(key, value),
   };
   const validate = (value) => {
     assert.ok(Array.isArray(value));
+    assert.ok(
+      value.every(
+        (item) =>
+          item &&
+          typeof item.id === 'string' &&
+          typeof item.endedAt === 'string' &&
+          Number.isFinite(item.score),
+      ),
+    );
     return value;
   };
   try {
-    assert.throws(() => Core.saveRecords('records', [a], validate));
-    assert.equal(raw, 'broken');
-    raw = '[]';
     assert.deepEqual(Core.saveRecords('records', [a], validate), [a]);
+    assert.deepEqual(JSON.parse(values.get('records.quarantine')), ['broken']);
+    values.set('records', JSON.stringify([a, { id: 'damaged' }, null]));
+    assert.deepEqual(Core.readRecords('records', validate), [a]);
+    assert.deepEqual(JSON.parse(values.get('records.quarantine')), [{ id: 'damaged' }, null]);
     assert.deepEqual(Core.saveRecords('records', [b], validate), [a, b]);
+    assert.deepEqual(Core.saveRecords('records', [b], validate), [a, b]);
+    assert.throws(() => Core.saveRecords('records', [{ id: 'invalid' }], validate));
+    assert.deepEqual(JSON.parse(values.get('records')), [a, b]);
   } finally {
     delete global.localStorage;
   }

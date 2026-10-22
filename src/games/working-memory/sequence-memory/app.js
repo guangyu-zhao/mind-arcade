@@ -19,7 +19,6 @@ export function mountGame() {
   let settings = { size: 3, mode: 'prefix', order: 'forward' };
   let records = [];
 
-  let storageWritable = true;
   let phase = 'idle';
   let session = null;
   let pointerAnswer = null;
@@ -95,8 +94,6 @@ export function mountGame() {
   }
 
   function storageFailed() {
-    storageWritable = false;
-
     notify('ui.local-storage-unavailable');
   }
 
@@ -108,8 +105,7 @@ export function mountGame() {
         settings = { size: parsed.size, mode: parsed.mode, order: parsed.order ?? 'forward' };
     } catch {}
     try {
-      const raw = localStorage.getItem(RECORDS_KEY);
-      records = mergeRecords(validateRecords(raw ? JSON.parse(raw) : []));
+      records = mergeRecords(Core.readRecords(RECORDS_KEY, validateRecords));
     } catch {
       storageFailed();
     }
@@ -144,24 +140,14 @@ export function mountGame() {
   });
 
   function persistRecords() {
-    if (!storageWritable) return false;
     try {
       records = Core.saveRecords(RECORDS_KEY, records, validateRecords);
-      storageWritable = true;
 
       return true;
     } catch {
       storageFailed();
       return false;
     }
-  }
-
-  function matchesMode(record) {
-    return (
-      record.size === settings.size &&
-      record.mode === settings.mode &&
-      record.order === settings.order
-    );
   }
 
   function expectedCell() {
@@ -401,9 +387,7 @@ export function mountGame() {
       schedule(revealResult, 650);
     } else revealResult();
 
-    const previous = records
-      .filter(matchesMode)
-      .filter((record) => history.compatible(record, session.meta));
+    const previous = Core.previousRecords(records, session.meta);
     const last = previous.at(-1);
     const best = previous.reduce((value, record) => Math.max(value, record.score), 0);
     const id =
@@ -530,7 +514,7 @@ export function mountGame() {
   window.addEventListener('storage', (event) => {
     if (event.key !== RECORDS_KEY || !event.newValue) return;
     try {
-      records = mergeRecords(records, validateRecords(JSON.parse(event.newValue)));
+      records = mergeRecords(records, Core.readRecords(RECORDS_KEY, validateRecords));
       history.updateContext();
     } catch {}
   });

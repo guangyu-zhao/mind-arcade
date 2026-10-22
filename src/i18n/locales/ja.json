@@ -631,5 +631,19 @@
   "rules.rotation-intro": "回転した文字・記号を判断し、矢印を記憶",
   "ui.local-storage-unavailable": "ローカルに保存できません。",
   "ui.local-result-kept-on-page": "ローカルの記録は一時的にこのページに保持されます。",
-  "ui.cancel-round": "今回を中止"
+  "ui.cancel-round": "今回を中止",
+  "cloud.save-synced": "クラウドに保存済み",
+  "cloud.save-pending": "同期待ち",
+  "cloud.save-failed": "同期に失敗しました。下で再試行できます",
+  "cloud.sample-players": "プレイヤー：{n} 人",
+  "cloud.sample-runs": "記録：{n} 回",
+  "span.review-title": "判断の間違いを確認 · {n}",
+  "span.review-item": "レベル {level} · 問 {n}",
+  "span.review-your-answer": "あなたの回答：{answer}",
+  "span.review-expected": "正解：{answer}",
+  "span.review-timeout": "未回答",
+  "home.favorites": "お気に入り",
+  "home.add-favorite": "{name} をお気に入りに追加",
+  "home.remove-favorite": "{name} をお気に入りから削除",
+  "home.favorites-empty": "星を押すとゲームをお気に入りに追加できます。"
 }

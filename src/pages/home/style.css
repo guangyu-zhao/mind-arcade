@@ -385,3 +385,47 @@ h3 {
     transform: none;
   }
 }
+
+.game-tile {
+  position: relative;
+  min-width: 0;
+}
+.game-tile .game-card {
+  height: 100%;
+  padding-top: 36px;
+}
+.favorite-button {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 11px;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: #8b8498;
+}
+.favorite-button svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linejoin: round;
+}
+.favorite-button:hover {
+  background: var(--soft);
+}
+.favorite-button[aria-pressed='true'] {
+  color: #8b6840;
+}
+.favorite-button[aria-pressed='true'] svg {
+  fill: #eadac2;
+}
+.favorites-empty {
+  color: var(--muted);
+  font-size: 16px;
+}

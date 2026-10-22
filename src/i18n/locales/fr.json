@@ -631,5 +631,19 @@
   "rules.rotation-intro": "Jugez des caractères tournés et mémorisez des flèches",
   "ui.local-storage-unavailable": "L’enregistrement local est indisponible.",
   "ui.local-result-kept-on-page": "Le résultat local reste sur cette page pour le moment.",
-  "ui.cancel-round": "Annuler la partie"
+  "ui.cancel-round": "Annuler la partie",
+  "cloud.save-synced": "Enregistré dans le cloud",
+  "cloud.save-pending": "Synchronisation en attente",
+  "cloud.save-failed": "Échec de la synchronisation · réessayez ci-dessous",
+  "cloud.sample-players": "Joueurs : {n}",
+  "cloud.sample-runs": "Parties : {n}",
+  "span.review-title": "Revoir les erreurs de jugement · {n}",
+  "span.review-item": "Niveau {level} · Question {n}",
+  "span.review-your-answer": "Votre réponse : {answer}",
+  "span.review-expected": "Bonne réponse : {answer}",
+  "span.review-timeout": "Sans réponse",
+  "home.favorites": "Favoris",
+  "home.add-favorite": "Ajouter {name} aux favoris",
+  "home.remove-favorite": "Retirer {name} des favoris",
+  "home.favorites-empty": "Utilisez les étoiles pour ajouter vos jeux favoris."
 }

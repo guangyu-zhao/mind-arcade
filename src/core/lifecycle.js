@@ -6,7 +6,18 @@ export function connectScores(next) {
 }
 /** Capture ownership once, before the game begins. @param {import('./types.js').ScoreMeta} meta */
 export function beginRecord(meta) {
-  owners.set(meta, { owner: service.userId, finished: false, sent: false });
+  meta.ownerId = service.userId;
+  owners.set(meta, {
+    owner: service.userId,
+    previous: service.userId ? (service.previousScores?.(meta) ?? null) : [],
+    finished: false,
+    sent: false,
+  });
+  service.begin?.();
+}
+export function comparisonHistory(meta) {
+  const state = owners.get(meta);
+  return state && state.owner === service.userId ? state.previous : null;
 }
 export function copyOwnership(source, target) {
   if (owners.has(source)) owners.set(target, owners.get(source));

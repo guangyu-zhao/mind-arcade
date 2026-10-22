@@ -2,10 +2,10 @@ import { currentGame } from '../../../catalog.js';
 import { Core } from '../../../core/index.js';
 import { GameText } from '../../../engines/span/i18n.js';
 import { CognitiveGame } from '../../../engines/progressive.js';
+import { rotationCharacters as CHARACTERS } from './characters.js';
 export function mountGame() {
   const G = CognitiveGame;
   const VERSION = currentGame().version;
-  const CHARACTERS = [...'2457QRPSFGJL@&%?'];
   const RECORDED_CHARACTERS = new Set([...CHARACTERS, ...'3BCDEKNZ']);
   const DEADLINE = 5000,
     EXPOSURE = 1000,
@@ -81,7 +81,7 @@ export function mountGame() {
     return svg;
   }
   function drawLetter(ctx, item) {
-    const svg = ctx.picture();
+    const svg = ctx.svg('svg', { viewBox: '0 0 640 480', 'aria-hidden': 'true' });
     svg.classList.add('rotation-letter');
     const glyph = ctx.svg('text', {
       x: 0,
@@ -96,12 +96,13 @@ export function mountGame() {
     });
     glyph.textContent = item.letter;
     svg.append(glyph);
+    return svg;
   }
 
   async function judge(ctx, item) {
     ctx.phase('judge');
     ctx.hint('judgeHint');
-    drawLetter(ctx, item);
+    ctx.stage.replaceChildren(drawLetter(ctx, item));
     const normal = ctx.button('normal'),
       mirror = ctx.button('mirror');
     normal.setAttribute('aria-keyshortcuts', 'ArrowLeft');
@@ -403,6 +404,14 @@ export function mountGame() {
     validateContext,
     passes,
     feedback,
+    describeJudgment(ctx, item) {
+      return {
+        correct: !item.timedOut && item.response === item.mirrored,
+        answer: item.timedOut ? 'reviewTimeout' : item.response ? 'mirror' : 'normal',
+        expected: [item.mirrored ? 'mirror' : 'normal'],
+        drawing: drawLetter(ctx, item),
+      };
+    },
 
     validateSession(_trials, meta) {
       if (!meta || meta.rulesVersion !== VERSION) throw Error('session rules');

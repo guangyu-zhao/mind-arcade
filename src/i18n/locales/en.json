@@ -631,5 +631,19 @@
   "rules.rotation-intro": "Judge rotated characters and remember arrows",
   "ui.local-storage-unavailable": "Local saving is unavailable.",
   "ui.local-result-kept-on-page": "The local record is kept on this page for now.",
-  "ui.cancel-round": "Cancel round"
+  "ui.cancel-round": "Cancel round",
+  "cloud.save-synced": "Synced to cloud",
+  "cloud.save-pending": "Waiting to sync",
+  "cloud.save-failed": "Sync failed · retry below",
+  "cloud.sample-players": "Players: {n}",
+  "cloud.sample-runs": "Attempts: {n}",
+  "span.review-title": "Review judgment errors · {n}",
+  "span.review-item": "Level {level} · Item {n}",
+  "span.review-your-answer": "Your answer: {answer}",
+  "span.review-expected": "Correct answer: {answer}",
+  "span.review-timeout": "No answer",
+  "home.favorites": "Favorites",
+  "home.add-favorite": "Add {name} to favorites",
+  "home.remove-favorite": "Remove {name} from favorites",
+  "home.favorites-empty": "Use the stars to save your favorite games."
 }

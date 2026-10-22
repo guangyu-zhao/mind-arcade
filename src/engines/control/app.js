@@ -34,7 +34,6 @@ export function mountGame() {
   let lastClock = '';
   let records = [];
 
-  let storageWritable = true;
   let noticeTimeout;
 
   const shuffle = Core.shuffle;
@@ -125,8 +124,6 @@ export function mountGame() {
     }, 6500);
   }
   function storageFailed() {
-    storageWritable = false;
-
     notify('ui.local-storage-unavailable');
   }
   function loadData() {
@@ -136,18 +133,14 @@ export function mountGame() {
         stimulusLanguage = saved.stimulusLanguage;
     } catch {}
     try {
-      records = mergeRecords(
-        validateRecords(JSON.parse(localStorage.getItem(RECORDS_KEY) || '[]')),
-      );
+      records = mergeRecords(Core.readRecords(RECORDS_KEY, validateRecords));
     } catch {
       storageFailed();
     }
   }
   function persistRecords() {
-    if (!storageWritable) return false;
     try {
       records = Core.saveRecords(RECORDS_KEY, records, validateRecords);
-      storageWritable = true;
 
       return true;
     } catch {
@@ -427,9 +420,7 @@ export function mountGame() {
     I18n.text($('final-time'), m('ui.time-value-s', (elapsedMs / 1000).toFixed(1)));
     I18n.text($('attempt-count'), '');
     I18n.text($('board-hint'), '');
-    const previous = records
-      .filter((r) => r.stimulusLanguage === session.stimulusLanguage)
-      .filter((record) => history.compatible(record, session.meta));
+    const previous = Core.previousRecords(records, session.meta);
     const best = previous.reduce((value, r) => Math.max(value, r.score), -Infinity);
     const record = {
       meta: history.finish(session.meta),
@@ -544,7 +535,7 @@ export function mountGame() {
   window.addEventListener('storage', (event) => {
     if (event.key !== RECORDS_KEY || !event.newValue) return;
     try {
-      records = mergeRecords(records, validateRecords(JSON.parse(event.newValue)));
+      records = mergeRecords(records, Core.readRecords(RECORDS_KEY, validateRecords));
       history.updateContext();
     } catch {}
   });

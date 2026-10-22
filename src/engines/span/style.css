@@ -53,6 +53,8 @@ p {
   position: relative;
   width: calc(100% * var(--display-scale, 1));
   aspect-ratio: 4/3;
+  min-width: min(100%, 160px);
+  min-height: 160px;
   margin: 0 auto;
   overflow: hidden;
 }
@@ -89,17 +91,27 @@ p {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 20px;
+  justify-content: safe center;
+  gap: calc(8px / var(--display-scale, 1));
   text-align: center;
-  padding: 24px;
+  padding: calc(12px / var(--display-scale, 1));
+  overflow-y: auto;
   background: #faf9fc;
   border-radius: 12px;
 }
 .stage-center p {
   max-width: 430px;
-  font-size: 18px;
+  font-size: calc(16px / var(--display-scale, 1));
+  flex-shrink: 0;
+  overflow-wrap: anywhere;
   color: var(--muted);
+}
+.stage-center h2 {
+  font-size: calc(21px / var(--display-scale, 1));
+  flex-shrink: 0;
+}
+.stage-frame[data-compact] .preview {
+  display: none;
 }
 .preview {
   width: 144px;
@@ -213,7 +225,7 @@ p {
   right: 8px;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: calc(6px / var(--display-scale, 1));
   padding: 3px;
   overflow-x: auto;
   overscroll-behavior-x: contain;
@@ -221,14 +233,14 @@ p {
 }
 .sequence-step {
   flex-shrink: 0;
-  min-width: 34px;
-  min-height: 32px;
+  min-width: calc(36px / var(--display-scale, 1));
+  min-height: calc(36px / var(--display-scale, 1));
   padding: 3px 7px;
   border: 1px solid var(--line);
   border-radius: 6px;
   background: #fff;
   color: var(--accent);
-  font-size: 16px;
+  font-size: calc(16px / var(--display-scale, 1));
 }
 .sequence-step.active {
   background: var(--soft);
@@ -242,16 +254,6 @@ p {
   color: #994d46;
 }
 @media (max-width: 540px) {
-  .stage-center {
-    padding: 16px;
-    gap: 12px;
-  }
-  .stage-center h2 {
-    font-size: 21px;
-  }
-  .stage-center p {
-    font-size: 16px;
-  }
   .preview {
     width: 110px;
     height: 76px;
@@ -276,4 +278,38 @@ p {
   button {
     transition: none;
   }
+}
+
+.judgment-review {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  font-size: 16px;
+}
+.judgment-review summary {
+  color: var(--accent);
+  padding: 8px 0;
+}
+.judgment-review-body {
+  display: grid;
+  gap: 10px;
+  padding-top: 12px;
+}
+.judgment-review-drawing {
+  display: flex;
+  justify-content: center;
+  background: var(--soft);
+  border-radius: 12px;
+}
+.judgment-review-drawing svg {
+  display: block;
+  width: 100%;
+  max-width: 320px;
+  height: 240px;
+}
+.judgment-review-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
 }

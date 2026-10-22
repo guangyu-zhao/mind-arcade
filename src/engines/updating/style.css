@@ -40,7 +40,7 @@
   background: var(--soft);
 }
 .updating-card .channel-name {
-  font-size: 16px;
+  font-size: calc(16px / var(--display-scale, 1));
   font-weight: 650;
   line-height: 1.2;
 }
@@ -86,15 +86,23 @@
   font-size: 48px;
   line-height: 1;
 }
-.updating-answer-card {
-  padding: 4px;
-  gap: 3px;
+.updating-answer-card,
+.updating-review-area .updating-card {
+  max-width: calc(148px / var(--display-scale, 1));
+  max-height: calc(112px / var(--display-scale, 1));
+  padding: calc(4px / var(--display-scale, 1));
+  gap: calc(3px / var(--display-scale, 1));
 }
-.updating-answer-card .channel-name {
-  font-size: 15px;
+.updating-answer-card.spatial-answer {
+  max-height: calc(174px / var(--display-scale, 1));
 }
 .updating-answer-card .updating-mini-grid {
-  width: min(84px, 100cqw, calc(100cqh - 21px));
+  width: min(
+    calc(138px / var(--display-scale, 1)),
+    100cqw,
+    calc(100cqh - 24px / var(--display-scale, 1))
+  );
+  gap: calc(3px / var(--display-scale, 1));
 }
 .updating-answer-card.filled {
   border-color: var(--accent);
@@ -134,14 +142,14 @@
 .updating-input-row input {
   width: 100%;
   min-width: 0;
-  height: 44px;
+  height: calc(44px / var(--display-scale, 1));
   padding: 4px;
   border: 1px solid #cbc6d8;
   border-radius: 6px;
   background: #fff;
   color: var(--accent);
   text-align: center;
-  font-size: 24px;
+  font-size: calc(20px / var(--display-scale, 1));
   font-variant-numeric: tabular-nums;
 }
 .updating-input-row input::placeholder {
@@ -153,14 +161,14 @@
 }
 .updating-sign {
   flex: none;
-  width: 28px;
-  height: 44px;
+  width: calc(44px / var(--display-scale, 1));
+  height: calc(44px / var(--display-scale, 1));
   padding: 0;
   border: 1px solid var(--line);
   border-radius: 6px;
   background: #fff;
   color: var(--accent);
-  font-size: 21px;
+  font-size: calc(21px / var(--display-scale, 1));
 }
 .updating-sign:hover {
   background: var(--soft);
@@ -219,7 +227,7 @@
   place-items: center;
   flex: 1;
   min-height: 0;
-  font-size: 28px;
+  font-size: max(28px, calc(18px / var(--display-scale, 1)));
   font-variant-numeric: tabular-nums;
 }
 .updating-results {
@@ -246,7 +254,7 @@
   color: #a45f56;
 }
 .updating-result-line strong {
-  font-size: 20px;
+  font-size: calc(16px / var(--display-scale, 1));
   font-weight: 550;
 }
 .updating-tail-options {
@@ -256,4 +264,28 @@
   .stage-frame {
     aspect-ratio: 3/4;
   }
+}
+
+.updating-answer-card .updating-input-row {
+  gap: calc(4px / var(--display-scale, 1));
+}
+.updating-review-pagination .button {
+  font-size: calc(18px / var(--display-scale, 1));
+  min-width: calc(44px / var(--display-scale, 1));
+  min-height: calc(44px / var(--display-scale, 1));
+  padding: 0;
+}
+.updating-review-pagination > span {
+  font-size: calc(15px / var(--display-scale, 1));
+}
+.updating-review-area .updating-mini-grid {
+  width: min(
+    calc(84px / var(--display-scale, 1)),
+    100cqw,
+    calc(100cqh - 24px / var(--display-scale, 1))
+  );
+}
+.updating-review-area .updating-result-mark,
+.updating-review-area .updating-result-line span {
+  font-size: calc(16px / var(--display-scale, 1));
 }

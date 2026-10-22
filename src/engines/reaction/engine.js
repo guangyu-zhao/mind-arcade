@@ -88,7 +88,7 @@ export function mountGame() {
     }, 6500);
   }
   try {
-    records = validateRecords(JSON.parse(localStorage.getItem(RECORDS_KEY) || '[]'));
+    records = Core.readRecords(RECORDS_KEY, validateRecords);
   } catch {}
   function setPhase(next) {
     phase = next;
@@ -210,7 +210,7 @@ export function mountGame() {
     session = {
       trials: [],
       early: [],
-      bag: [],
+      waitBalance: 0,
       started: 0,
       lastFrame: 0,
       countdown: performance.now(),
@@ -228,15 +228,15 @@ export function mountGame() {
     frame = requestAnimationFrame(tick);
   }
   function queue(now) {
-    session.waitMs = p.waitMin + Math.random() * (p.waitMax - p.waitMin);
+    const wait = M.nextWait(kind, session.waitBalance);
+    session.waitMs = wait.waitMs;
+    session.waitBalance = wait.balance;
     session.due = now + session.waitMs;
     trial = null;
     waiting();
   }
   function showTrial(now) {
-    if (kind !== 'pvt' && !session.bag.length)
-      session.bag = Core.shuffle(kind === 'gonogo' ? [0, 0, 0, 1] : [0, 1]);
-    const target = kind === 'pvt' ? 0 : session.bag.pop();
+    const target = M.nextTarget(kind);
     trial = {
       target,
       answer: null,
@@ -397,7 +397,7 @@ export function mountGame() {
   window.addEventListener('storage', (event) => {
     if (event.key !== RECORDS_KEY || !event.newValue) return;
     try {
-      records = Core.mergeRecords(records, validateRecords(JSON.parse(event.newValue)));
+      records = Core.mergeRecords(records, Core.readRecords(RECORDS_KEY, validateRecords));
     } catch {
       notify('ui.could-not-save-settings');
     }

@@ -53,7 +53,7 @@ export function mountGame() {
     return cells.every((v, i) => v === cells[Math.floor(i / side) * side + side - 1 - (i % side)]);
   }
   function drawPattern(ctx, cells) {
-    const s = ctx.picture();
+    const s = ctx.svg('svg', { viewBox: '0 0 640 480', 'aria-hidden': 'true' });
     cells.forEach((filled, i) =>
       s.append(
         ctx.svg('rect', {
@@ -72,7 +72,7 @@ export function mountGame() {
   async function judge(ctx, cells) {
     ctx.phase('judge');
     ctx.hint('judgeHint');
-    drawPattern(ctx, cells);
+    ctx.stage.replaceChildren(drawPattern(ctx, cells));
     const yes = ctx.button('symmetric'),
       no = ctx.button('asymmetric');
     ctx.toolbar.replaceChildren(yes, no);
@@ -218,6 +218,15 @@ export function mountGame() {
     validateTrial,
     passes,
     validateContext,
+    describeJudgment(ctx, item) {
+      const symmetric = isSymmetric(item.cells);
+      return {
+        correct: !item.timedOut && item.response === symmetric,
+        answer: item.timedOut ? 'reviewTimeout' : item.response ? 'symmetric' : 'asymmetric',
+        expected: [symmetric ? 'symmetric' : 'asymmetric'],
+        drawing: drawPattern(ctx, item.cells),
+      };
+    },
     feedback(ctx, t) {
       ctx.phase('recallFeedback', { n: recallCorrect(t), total: t.positions.length });
       ctx.hint('judgmentFeedback', { n: judgmentsCorrect(t), total: t.judgments.length });

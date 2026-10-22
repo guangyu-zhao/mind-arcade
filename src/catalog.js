@@ -263,7 +263,6 @@ export const games = [
       slug: 'spatial-updating',
       preview:
         '<g fill="none" stroke="currentColor" stroke-width="2"><rect x="12" y="20" width="60" height="60" rx="5"/><rect x="88" y="20" width="60" height="60" rx="5"/><path d="M32 20v60M52 20v60M12 40h60M12 60h60M108 20v60M128 20v60M88 40h60M88 60h60" opacity=".25"/><path d="M99 70h38m-8-8 8 8-8 8"/><circle cx="42" cy="50" r="6" fill="currentColor" stroke="none"/></g>',
-      references: ['https://pmc.ncbi.nlm.nih.gov/articles/PMC9313590/'],
       title: 'catalog.spatial-updating',
     },
     assets: {
@@ -300,7 +299,6 @@ export const games = [
       slug: 'arithmetic-updating',
       preview:
         '<g fill="none" stroke="currentColor" stroke-width="2"><rect x="15" y="20" width="52" height="60" rx="6"/><rect x="93" y="20" width="52" height="60" rx="6"/><path d="M72 50h16m-8-8v16"/></g><g fill="currentColor" font-family="system-ui,sans-serif" font-size="34" text-anchor="middle"><text x="41" y="63">4</text><text x="119" y="63">7</text></g>',
-      references: ['https://www.sciencedirect.com/science/article/pii/S0022249622000487'],
       title: 'catalog.arithmetic-updating',
     },
     assets: {
@@ -337,7 +335,6 @@ export const games = [
       slug: 'multi-stream-running-span',
       preview:
         '<g fill="none" stroke="currentColor" stroke-width="2"><path d="M12 35h132m-8-8 8 8-8 8M12 78h132m-8-8 8 8-8 8" opacity=".25"/><rect x="63" y="14" width="61" height="31" rx="5"/><rect x="63" y="57" width="61" height="31" rx="5"/></g><g fill="currentColor" font-family="system-ui,sans-serif" font-size="23" text-anchor="middle"><text x="32" y="38" opacity=".3">6</text><text x="78" y="38">2</text><text x="108" y="38">9</text><text x="32" y="81" opacity=".3">1</text><text x="78" y="81">5</text><text x="108" y="81">3</text></g>',
-      references: ['https://englelab.gatech.edu/articles/2010/broadway-engle-2010.pdf'],
       title: 'catalog.multi-stream-running-span',
     },
     assets: {

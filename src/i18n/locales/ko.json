@@ -631,5 +631,19 @@
   "rules.rotation-intro": "회전한 문자·기호를 판단하고 화살표 기억",
   "ui.local-storage-unavailable": "기기에 기록을 저장할 수 없습니다.",
   "ui.local-result-kept-on-page": "기기 내 기록은 현재 페이지에 임시로 보관됩니다.",
-  "ui.cancel-round": "이번 게임 취소"
+  "ui.cancel-round": "이번 게임 취소",
+  "cloud.save-synced": "클라우드에 저장됨",
+  "cloud.save-pending": "동기화 대기 중",
+  "cloud.save-failed": "동기화 실패 · 아래에서 재시도",
+  "cloud.sample-players": "플레이어: {n}명",
+  "cloud.sample-runs": "기록: {n}회",
+  "span.review-title": "판단 오답 확인 · {n}",
+  "span.review-item": "레벨 {level} · 문항 {n}",
+  "span.review-your-answer": "내 답: {answer}",
+  "span.review-expected": "정답: {answer}",
+  "span.review-timeout": "미응답",
+  "home.favorites": "즐겨찾기",
+  "home.add-favorite": "{name} 즐겨찾기에 추가",
+  "home.remove-favorite": "{name} 즐겨찾기에서 삭제",
+  "home.favorites-empty": "별표를 눌러 게임을 즐겨찾기에 추가하세요."
 }

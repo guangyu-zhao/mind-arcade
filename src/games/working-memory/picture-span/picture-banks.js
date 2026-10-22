@@ -6,7 +6,7 @@ const { P, L, C, E, R, G, B, N, I, W, Y, Q, T, definitions } = PictureArt;
 const airplane = definitions.find((def) => def.category === 'airplane');
 const topPlane = airplane.render;
 airplane.normal = (f) => {
-  if (f === 0) return G(topPlane(0, 0), 'rotate(-26 48 48) translate(6 6) scale(.87)');
+  if (f === 0) return G(topPlane(0), 'rotate(-26 48 48) translate(6 6) scale(.87)');
   if (f === 1)
     return (
       P('M7 49h14l7-28 13 4-1 24h32l19 9-12 9H24L7 58Z', B) +
@@ -47,7 +47,7 @@ airplane.normal = (f) => {
 
 // Additional silhouettes for familiar objects, beyond surface decorations.
 const umbrella = definitions.find((def) => def.category === 'umbrella');
-umbrella.normal = (f, k) => {
+umbrella.normal = (f) => {
   if (f === 1)
     return (
       P('m36 11 25 57-16 10-7-48Z', B) + L('M42 15 61 78q7 15 18 2', W, 4) + L('M44 40 57 66', I, 3)
@@ -60,11 +60,11 @@ umbrella.normal = (f, k) => {
       E(49, 87, 35, 5, Y) +
       P('m67 69 10-13 13 20H61Z', B)
     );
-  return umbrella.render(f, k);
+  return umbrella.render(f);
 };
 
 function drawing(def, form) {
-  const art = (def.normal || def.render)(form, 0);
+  const art = (def.normal || def.render)(form);
   return `<g stroke-linecap="round" stroke-linejoin="round">${G(art, 'translate(4 4) scale(.92)')}</g>`;
 }
 export function createPictureBank() {

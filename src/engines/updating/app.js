@@ -75,20 +75,21 @@ export function mountGame() {
       result = String.fromCharCode(65 + ((n - 1) % 26)) + result;
     return result;
   }
-  function panelLayout(stage, reservedHeight = 0) {
+  function panelLayout(stage, reservedHeight = 0, answers = false) {
     const style = getComputedStyle(stage);
     const size = (name) => parseFloat(style.getPropertyValue(`--updating-${name}`));
-    const inset = size('inset'),
-      gap = size('gap');
+    const scale = answers ? stage.getBoundingClientRect().width / stage.clientWidth : 1,
+      inset = size('inset'),
+      gap = size('gap'),
+      minWidth = answers ? (spatial ? 150 : 136) / scale : size('min-width'),
+      minHeight = answers ? (spatial ? 174 : 104) / scale : size('min-height');
     const columns = Math.max(
       1,
-      Math.floor((stage.clientWidth - inset * 2 + gap) / (size('min-width') + gap)),
+      Math.floor((stage.clientWidth - inset * 2 + gap) / (minWidth + gap)),
     );
     const rows = Math.max(
       1,
-      Math.floor(
-        (stage.clientHeight - inset * 2 - reservedHeight + gap) / (size('min-height') + gap),
-      ),
+      Math.floor((stage.clientHeight - inset * 2 - reservedHeight + gap) / (minHeight + gap)),
     );
     return { columns, rows, capacity: columns * rows, reservedHeight };
   }
@@ -149,13 +150,21 @@ export function mountGame() {
     }
     ctx.stage.replaceChildren(board);
   }
-  function pageControls(ctx, pages, change) {
+  function pageControls(ctx, pages, change, compact = false) {
     const root = ctx.node('div', null, null, 'updating-pagination');
     const previous = ctx.button('previousPage'),
       next = ctx.button('nextPage'),
       label = ctx.node('span');
     label.setAttribute('role', 'status');
     root.append(previous, label, next);
+    if (compact) {
+      [previous, next].forEach((button, index) => {
+        ctx.I.label(button, index ? 'nextPage' : 'previousPage');
+        delete button.dataset.l10n;
+        delete button.dataset.values;
+        button.textContent = index ? '→' : '←';
+      });
+    }
     root.hidden = pages <= 1;
     let page = 0;
     previous.addEventListener('click', () => {
@@ -170,7 +179,10 @@ export function mountGame() {
         page = value;
         previous.disabled = page === 0;
         next.disabled = page + 1 >= pages;
-        ctx.I.text(label, 'pageNumber', { n: page + 1, total: pages });
+        if (compact) {
+          label.textContent = `${page + 1} / ${pages}`;
+          ctx.I.label(label, 'pageNumber', { n: page + 1, total: pages });
+        } else ctx.I.text(label, 'pageNumber', { n: page + 1, total: pages });
       },
     };
   }
@@ -178,7 +190,8 @@ export function mountGame() {
     ctx.phase('recall');
     const responses = Array.from({ length: plan.channels }, () => []),
       numberText = Array(plan.channels).fill('');
-    const { capacity } = ctx.session.panelLayout,
+    const layout = panelLayout(ctx.stage, 0, true),
+      { capacity } = layout,
       pages = Math.ceil(plan.channels / capacity);
     const visible = new Map(),
       submit = ctx.button('submit', null, true);
@@ -210,11 +223,12 @@ export function mountGame() {
       page = nextPage;
       revision++;
       visible.clear();
-      const board = makeBoard(ctx),
+      const board = makeBoard(ctx, layout),
         start = page * capacity;
       for (let index = start; index < Math.min(plan.channels, start + capacity); index++) {
         const card = makeCard(ctx, index, 'updating-answer-card'),
           entry = { card };
+        card.classList.toggle('spatial-answer', spatial);
         if (spatial) {
           const grid = ctx.node('div', null, null, 'updating-mini-grid updating-pick-grid');
           entry.buttons = Array.from({ length: 9 }, (_, value) => {
@@ -387,13 +401,15 @@ export function mountGame() {
       correct = expected.map((row, i) => row.every((value, j) => value === trial.responses[i][j]));
     ctx.phase('feedback', { n: correct.filter(Boolean).length, total: trial.channels });
     ctx.hint(spatial && correct.includes(false) ? 'spatialReviewHint' : '');
+    const scale = ctx.stage.getBoundingClientRect().width / ctx.stage.clientWidth;
+    const initialLayout = panelLayout(ctx.stage, 0, true);
     const layout =
-      trial.channels > ctx.session.panelLayout.capacity
-        ? panelLayout(ctx.stage, 56)
-        : ctx.session.panelLayout;
+      trial.channels > initialLayout.capacity
+        ? panelLayout(ctx.stage, 56 / scale, true)
+        : initialLayout;
     const root = ctx.node('div', null, null, 'updating-review-area'),
       pages = Math.ceil(trial.channels / layout.capacity);
-    const pager = pageControls(ctx, pages, drawPage);
+    const pager = pageControls(ctx, pages, drawPage, true);
     pager.root.classList.add('updating-review-pagination');
     let board;
     function drawPage(page) {

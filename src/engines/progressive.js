@@ -1,6 +1,7 @@
 import { GameText } from './span/i18n.js';
 import { Core } from '../core/index.js';
 import { currentGame } from '../catalog.js';
+import { judgmentReview } from './span/review.js';
 
 const I = GameText;
 
@@ -62,6 +63,7 @@ const CognitiveGame = {
       scaleSlider.setAttribute('aria-valuetext', `${displayScale}%`);
       $('display-scale-value').value = `${displayScale}%`;
       $('stage-frame').style.setProperty('--display-scale', String(displayScale / 100));
+      $('stage-frame').toggleAttribute('data-compact', displayScale < 70);
     }
     try {
       const saved = localStorage.getItem(SCALE_KEY);
@@ -200,12 +202,11 @@ const CognitiveGame = {
       return value.map(validateRecord);
     }
     try {
-      records = merge(validateRecords(JSON.parse(localStorage.getItem(RECORDS_KEY) || '[]')));
+      records = merge(Core.readRecords(RECORDS_KEY, validateRecords));
     } catch {
       storageFailed();
     }
     function persist() {
-      if (memoryOnly) return false;
       try {
         records = Core.saveRecords(RECORDS_KEY, records, validateRecords);
         memoryOnly = false;
@@ -266,6 +267,7 @@ const CognitiveGame = {
       I.text($('counter'), 'levelValue', { n: level });
     }
     function idle() {
+      document.querySelector('.judgment-review')?.remove();
       setPhase('ready');
       setHint('');
       $('toolbar').replaceChildren();
@@ -391,8 +393,6 @@ const CognitiveGame = {
         rules: s.meta.rules,
         session: s.taskSession,
         shuffle,
-        finite,
-        integer,
         node,
         svg,
         picture,
@@ -466,10 +466,15 @@ const CognitiveGame = {
 
       updateControls();
       showResult(record, s);
+      if (config.describeJudgment && record.status !== 'interrupted') {
+        const review = judgmentReview(s.ctx, s.trials, config.describeJudgment);
+        if (review) document.querySelector('.board-panel').append(review);
+      }
       history.updateContext();
     }
     async function start() {
       if (active || document.hidden) return;
+      document.querySelector('.judgment-review')?.remove();
       document.activeElement?.blur();
       $('help').open = false;
       const s = {
@@ -567,7 +572,7 @@ const CognitiveGame = {
     window.addEventListener('storage', (e) => {
       if (e.key === RECORDS_KEY && e.newValue) {
         try {
-          records = merge(records, validateRecords(JSON.parse(e.newValue)));
+          records = merge(records, Core.readRecords(RECORDS_KEY, validateRecords));
           history.updateContext();
         } catch {}
       }
@@ -610,13 +615,14 @@ const CognitiveGame = {
     if (typeof ResizeObserver === 'function') new ResizeObserver(resized).observe($('stage'));
     else window.addEventListener('resize', resized);
     idle();
+    window.addEventListener('mindlab-language-change', () =>
+      document.querySelector('.judgment-review')?.refreshLanguage(),
+    );
     I.update();
     history.updateContext();
   },
   shuffle,
   finite,
   integer,
-  node,
-  svg,
 };
 export { CognitiveGame };

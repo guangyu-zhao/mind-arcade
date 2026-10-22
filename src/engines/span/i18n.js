@@ -35,6 +35,13 @@ const strings = {
   gameOverLevel: 'span.game-over-highest-cleared-level-value',
   noLevel: 'span.level-1-not-yet-cleared',
   noLevelFinished: 'span.game-over-level-1-not-yet-cleared',
+  reviewTitle: 'span.review-title',
+  reviewItem: 'span.review-item',
+  reviewYourAnswer: 'span.review-your-answer',
+  reviewExpected: 'span.review-expected',
+  reviewTimeout: 'span.review-timeout',
+  reviewPrevious: 'game.previous',
+  reviewNext: 'game.next',
 };
 const L = Text;
 function tr(key, values = {}) {
@@ -79,12 +86,5 @@ const GameText = {
     Object.assign(strings, entries);
   },
   update,
-  choose: L.choose,
-  get language() {
-    return L.language;
-  },
-  get locale() {
-    return L.locale;
-  },
 };
 export { GameText };

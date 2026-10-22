@@ -100,7 +100,7 @@
   color: var(--accent);
 }
 .rotation-review p {
-  font-size: 17px;
+  font-size: calc(16px / var(--display-scale, 1));
 }
 .rotation-review svg {
   display: block;
@@ -140,8 +140,5 @@
   }
   .rotation-comparison {
     gap: 8px;
-  }
-  .rotation-review p {
-    font-size: 15px;
   }
 }

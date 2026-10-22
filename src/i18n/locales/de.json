@@ -631,5 +631,19 @@
   "rules.rotation-intro": "Gedrehte Zeichen beurteilen und Pfeile merken",
   "ui.local-storage-unavailable": "Lokales Speichern ist nicht möglich.",
   "ui.local-result-kept-on-page": "Das lokale Ergebnis bleibt vorerst auf dieser Seite.",
-  "ui.cancel-round": "Runde abbrechen"
+  "ui.cancel-round": "Runde abbrechen",
+  "cloud.save-synced": "In der Cloud gespeichert",
+  "cloud.save-pending": "Synchronisierung ausstehend",
+  "cloud.save-failed": "Synchronisierung fehlgeschlagen · unten erneut versuchen",
+  "cloud.sample-players": "Spieler: {n}",
+  "cloud.sample-runs": "Versuche: {n}",
+  "span.review-title": "Fehlentscheidungen ansehen · {n}",
+  "span.review-item": "Stufe {level} · Aufgabe {n}",
+  "span.review-your-answer": "Deine Antwort: {answer}",
+  "span.review-expected": "Richtige Antwort: {answer}",
+  "span.review-timeout": "Keine Antwort",
+  "home.favorites": "Favoriten",
+  "home.add-favorite": "{name} zu Favoriten hinzufügen",
+  "home.remove-favorite": "{name} aus Favoriten entfernen",
+  "home.favorites-empty": "Markiere Spiele mit dem Stern als Favoriten."
 }

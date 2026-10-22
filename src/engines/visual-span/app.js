@@ -28,7 +28,6 @@ export function mountVisualSpan({
 
   let records = [];
 
-  let storageWritable = true;
   let phase = 'idle';
   let session = null;
   let currentLength = startLength;
@@ -94,8 +93,6 @@ export function mountVisualSpan({
   }
 
   function storageFailed() {
-    storageWritable = false;
-
     notify('ui.local-storage-unavailable');
   }
 
@@ -105,8 +102,7 @@ export function mountVisualSpan({
       if (['forward', 'reverse'].includes(savedOrder)) recallOrder = savedOrder;
     } catch {}
     try {
-      const raw = localStorage.getItem(RECORDS_KEY);
-      records = mergeRecords(validateRecords(raw ? JSON.parse(raw) : []));
+      records = mergeRecords(Core.readRecords(RECORDS_KEY, validateRecords));
     } catch {
       storageFailed();
     }
@@ -119,10 +115,8 @@ export function mountVisualSpan({
   }
 
   function persistRecords() {
-    if (!storageWritable) return false;
     try {
       records = Core.saveRecords(RECORDS_KEY, records, validateRecords);
-      storageWritable = true;
 
       return true;
     } catch {
@@ -538,9 +532,7 @@ export function mountVisualSpan({
     if (reason === 'mistake') schedule(revealResult, 450);
     else revealResult();
 
-    const previous = records
-      .filter((record) => record.order === session.order)
-      .filter((record) => history.compatible(record, session.meta));
+    const previous = Core.previousRecords(records, session.meta);
     const last = previous.at(-1);
     const best = previous.reduce((value, record) => Math.max(value, record.score), 0);
     const id =
@@ -651,7 +643,7 @@ export function mountVisualSpan({
   window.addEventListener('storage', (event) => {
     if (event.key !== RECORDS_KEY || !event.newValue) return;
     try {
-      records = mergeRecords(records, validateRecords(JSON.parse(event.newValue)));
+      records = mergeRecords(records, Core.readRecords(RECORDS_KEY, validateRecords));
       history.updateContext();
     } catch {}
   });
