@@ -26,7 +26,11 @@ export function mountOverview() {
     if (filters.some((button) => button.dataset.filter === saved)) category = saved;
   } catch {}
   function applyFilter() {
-    const focused = document.activeElement?.dataset?.favorite;
+    const focused = document.activeElement,
+      focusedTile = focused?.closest('.game-tile'),
+      visibleTiles = [...document.querySelectorAll('.game-tile')].filter(
+        (tile) => !tile.closest('[hidden]'),
+      );
     tiles.forEach((tile) => homes.get(tile).append(tile));
     if (category === 'all' || category === 'favorites')
       tiles
@@ -56,8 +60,20 @@ export function mountOverview() {
       button.setAttribute('aria-label', label);
       button.title = label;
     });
-    if (focused)
-      document.querySelector(`[data-favorite="${focused}"]`)?.focus({ preventScroll: true });
+    if (focusedTile) {
+      let target = focused;
+      if (focused.closest('[hidden]')) {
+        const index = visibleTiles.indexOf(focusedTile),
+          next = [...visibleTiles.slice(index + 1), ...visibleTiles.slice(0, index).reverse()].find(
+            (tile) => !tile.closest('[hidden]'),
+          );
+        target =
+          next?.querySelector(
+            focused.matches('[data-favorite]') ? '[data-favorite]' : '.game-card',
+          ) || filters.find((filter) => filter.dataset.filter === category);
+      }
+      target?.focus({ preventScroll: true });
+    }
   }
   function updateStatus() {
     const visible = sections.filter((section) => !section.hidden);

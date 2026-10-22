@@ -15,7 +15,10 @@
 .ball-label {
   pointer-events: none;
   fill: white;
-  font-size: 16px;
+  stroke: #44404d;
+  stroke-width: 1.5px;
+  paint-order: stroke fill;
+  vector-effect: non-scaling-stroke;
   text-anchor: middle;
   dominant-baseline: central;
   font-weight: 600;

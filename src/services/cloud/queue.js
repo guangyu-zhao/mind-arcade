@@ -9,7 +9,8 @@ export function createScoreQueue({
   onUpload = () => {},
   storage,
 }) {
-  const memory = new Map();
+  const memory = new Map(),
+    uploadedKeys = new Set();
   let unavailable = false,
     flushing = false,
     error = '',
@@ -26,9 +27,13 @@ export function createScoreQueue({
     try {
       for (let i = 0; i < storage.length; i++) {
         const key = storage.key(i);
-        if (!key?.startsWith(pendingPrefix)) continue;
+        if (!key?.startsWith(pendingPrefix) || all.has(key) || uploadedKeys.has(key)) continue;
         try {
           const item = JSON.parse(storage.getItem(key));
+          if (item?.uploaded === true) {
+            uploadedKeys.add(key);
+            continue;
+          }
           if (item?.owner && item.record && gamesById.has(item.game)) all.set(key, item);
         } catch {}
       }
@@ -46,6 +51,17 @@ export function createScoreQueue({
       unavailable = true;
     }
   }
+  function removeUploaded(key) {
+    try {
+      storage.removeItem(key);
+      uploadedKeys.delete(key);
+    } catch {
+      unavailable = true;
+      try {
+        storage.setItem(key, JSON.stringify({ uploaded: true }));
+      } catch {}
+    }
+  }
   async function flush() {
     const { user, ready, epoch } = account.state;
     if (disposed || flushing || !client || !user || !ready || !navigator.onLine || isRunning())
@@ -54,6 +70,7 @@ export function createScoreQueue({
     flushing = true;
     onChange();
     try {
+      for (const key of uploadedKeys) removeUploaded(key);
       for (const [key, item] of entries()) {
         if (account.state.epoch !== epoch || account.state.user?.id !== user.id || isRunning())
           break;
@@ -72,12 +89,9 @@ export function createScoreQueue({
           else if (account.state.epoch === epoch) error = errorKey(issue);
           break;
         }
+        uploadedKeys.add(key);
         memory.delete(key);
-        try {
-          storage.removeItem(key);
-        } catch {
-          unavailable = true;
-        }
+        removeUploaded(key);
         uploaded = true;
         if (latest?.key === key) latest.status = 'synced';
         if (account.state.epoch === epoch) error = '';
@@ -117,6 +131,11 @@ export function createScoreQueue({
       )
         return;
       const key = `${pendingPrefix}${owner}:${game}:${record.id}`;
+      if (uploadedKeys.has(key)) {
+        latest = { key, owner, status: 'synced' };
+        onChange();
+        return;
+      }
       latest = { key, owner, status: 'pending' };
       store(key, { owner, game, record });
       onChange();

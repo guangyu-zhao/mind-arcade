@@ -115,6 +115,9 @@ export function mountGame() {
   }
   async function choose(ctx, positions, count) {
     const { s, groups } = draw(ctx, positions);
+    const bounds = s.getBoundingClientRect(),
+      displayScale = Math.max(0.01, Math.min(bounds.width / WIDTH, bounds.height / HEIGHT)),
+      labelSize = Math.max(20, 14 / displayScale);
     s.setAttribute('aria-hidden', 'false');
     s.setAttribute('role', 'group');
     ctx.I.label(s, 'chooseTargets');
@@ -144,7 +147,7 @@ export function mountGame() {
         // Identity numbers appear only after motion has stopped.
         const label = ctx.svg('text', { class: 'ball-label' });
         label.textContent = String(i + 1);
-        label.style.fontSize = `${Math.max(20, (14 * 640) / ctx.stage.clientWidth)}px`;
+        label.style.fontSize = `${labelSize}px`;
         g.append(label);
         const click = () => toggle(i),
           key = (e) => {

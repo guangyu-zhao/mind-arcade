@@ -135,27 +135,12 @@ const CognitiveGame = {
     function validateRecord(r) {
       if (
         !validHeader(r) ||
-        r.taskVersion !== config.version ||
         !['lives', 'user', 'hidden', 'resize', 'timing', 'error'].includes(r.reason) ||
-        !['complete', 'stopped', 'interrupted'].includes(r.status) ||
-        typeof r.layout !== 'string' ||
-        !/^\d{2,4}x\d{2,4}$/.test(r.layout) ||
-        !r.display ||
-        !finite(r.display.width) ||
-        r.display.width < 50 ||
-        r.display.width > 5000 ||
-        !finite(r.display.height) ||
-        r.display.height < 30 ||
-        r.display.height > 5000 ||
-        !finite(r.display.dpr) ||
-        r.display.dpr < 0.1 ||
-        r.display.dpr > 10 ||
-        (r.display.scale !== undefined &&
-          (!integer(r.display.scale, 40, 100) || r.display.scale % 5 !== 0))
+        !['complete', 'stopped', 'interrupted'].includes(r.status)
       )
         throw Error('record');
       const meta = Core.readMeta(r.meta);
-      if (!meta || meta.rulesVersion !== r.taskVersion) throw Error('rules version');
+      if (!meta || meta.rulesVersion !== config.version) throw Error('rules version');
       const state = replay(r.trials, meta.rules);
       config.validateSession?.(state.trials, meta);
       const expectedStatus =
@@ -169,7 +154,6 @@ const CognitiveGame = {
       return {
         meta,
         id: r.id,
-        taskVersion: r.taskVersion,
         startedAt: new Date(r.startedAt).toISOString(),
         endedAt: new Date(r.endedAt).toISOString(),
         elapsedMs: Math.round(r.elapsedMs),
@@ -177,20 +161,6 @@ const CognitiveGame = {
         reason: r.reason,
         score: state.highest,
         lives: state.lives,
-        layout: r.layout,
-        display: {
-          width: r.display.width,
-          height: r.display.height,
-          dpr: r.display.dpr,
-          ...(r.display.scale === undefined ? {} : { scale: r.display.scale }),
-        },
-        inputTypes: Array.isArray(r.inputTypes)
-          ? [
-              ...new Set(
-                r.inputTypes.filter((v) => ['mouse', 'pen', 'touch', 'keyboard'].includes(v)),
-              ),
-            ]
-          : [],
         maxFrameGapMs: finite(r.maxFrameGapMs)
           ? Math.max(0, Math.min(86400000, r.maxFrameGapMs))
           : 0,
@@ -216,19 +186,6 @@ const CognitiveGame = {
         return false;
       }
     }
-    function dimensions() {
-      const r = $('stage').getBoundingClientRect();
-      return {
-        width: r.width,
-        height: r.height,
-        dpr: window.devicePixelRatio || 1,
-        scale: displayScale,
-      };
-    }
-    function layoutKey(d = dimensions()) {
-      return `${Math.round(d.width / 10) * 10}x${Math.round(d.height / 10) * 10}`;
-    }
-
     function updateScore(value) {
       $('score').textContent = String(value);
       I.text($('score-unit'), 'levelUnit');
@@ -446,7 +403,6 @@ const CognitiveGame = {
       const record = {
         meta: history.finish(s.meta),
         id: s.id,
-        taskVersion: config.version,
         startedAt: s.startedAt,
         endedAt: new Date().toISOString(),
         elapsedMs: Core.elapsed(s.started),
@@ -454,9 +410,6 @@ const CognitiveGame = {
         reason,
         score: s.highest,
         lives: s.lives,
-        layout: s.layout,
-        display: s.display,
-        inputTypes: [...s.inputTypes],
         maxFrameGapMs: s.maxFrameGapMs,
         trials: s.trials,
       };
@@ -489,14 +442,11 @@ const CognitiveGame = {
         highest: 0,
         lives: LIVES,
         trials: [],
-        inputTypes: new Set(),
         maxFrameGapMs: 0,
       };
       active = s;
       updateControls();
       s.meta = history.begin();
-      s.display = dimensions();
-      s.layout = layoutKey(s.display);
       s.taskSession = config.createSession?.(s.meta.rules);
       s.ctx = context(s);
       updateScore(0);
@@ -586,24 +536,13 @@ const CognitiveGame = {
     window.addEventListener('pagehide', () => {
       if (active) finish('hidden');
     });
-    document.addEventListener(
-      'pointerdown',
-      (e) => {
-        if (active && ['mouse', 'touch', 'pen'].includes(e.pointerType))
-          active.inputTypes.add(e.pointerType);
-      },
-      { passive: true },
-    );
-    document.addEventListener('keydown', () => {
-      if (active) active.inputTypes.add('keyboard');
-    });
     let resizeTimer;
     function resized() {
       if (active) {
-        const d = dimensions();
+        const d = $('stage').getBoundingClientRect();
         if (
-          Math.abs(d.width - active.display.width) > 2 ||
-          Math.abs(d.height - active.display.height) > 2
+          Math.abs(d.width - active.meta.display.width) > 2 ||
+          Math.abs(d.height - active.meta.display.height) > 2
         ) {
           finish('resize');
           notice('resizeStop');

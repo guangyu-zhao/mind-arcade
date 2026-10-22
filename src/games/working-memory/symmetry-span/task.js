@@ -224,7 +224,7 @@ export function mountGame() {
         correct: !item.timedOut && item.response === symmetric,
         answer: item.timedOut ? 'reviewTimeout' : item.response ? 'symmetric' : 'asymmetric',
         expected: [symmetric ? 'symmetric' : 'asymmetric'],
-        drawing: drawPattern(ctx, item.cells),
+        drawing: () => drawPattern(ctx, item.cells),
       };
     },
     feedback(ctx, t) {

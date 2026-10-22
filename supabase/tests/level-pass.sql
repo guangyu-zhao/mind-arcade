@@ -25,7 +25,7 @@ select is(mind_lab_private.level_pass('symmetry-span-plus-plus',
  '{"level":1,"positions":[0],"responses":[3],"judgments":[{"frames":[{"target":0},{"target":3}],"response":"left-right","timedOut":false}]}',
  '{"size":4,"order":"reverse","transform":"rotated"}'),true,'symmetry span ++ validates a rotated response');
 select is(mind_lab_private.level_pass('rotation-span',
- '{"level":2,"arrows":[0,1],"responses":[0,1],"judgments":[{"letter":"F","angle":45,"response":false,"mirrored":false,"timedOut":false}]}',
+ '{"level":2,"arrows":[0,1],"responses":[0,1],"judgments":[{"letter":"F","angle":45,"response":false,"mirrored":false,"timedOut":false},{"letter":"R","angle":90,"response":true,"mirrored":true,"timedOut":false}]}',
  '{}'),true,'rotation span validates judgment and arrow recall');
 
 select * from finish();

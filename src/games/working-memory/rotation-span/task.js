@@ -409,7 +409,7 @@ export function mountGame() {
         correct: !item.timedOut && item.response === item.mirrored,
         answer: item.timedOut ? 'reviewTimeout' : item.response ? 'mirror' : 'normal',
         expected: [item.mirrored ? 'mirror' : 'normal'],
-        drawing: drawLetter(ctx, item),
+        drawing: () => drawLetter(ctx, item),
       };
     },
 

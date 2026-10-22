@@ -241,7 +241,7 @@ export function mountGame() {
   function start() {
     if (document.hidden) return;
     cancelScheduled();
-    session = { duration, correct: 0, wrong: 0, missed: 0, pages: 0, binaryBag: [], digitBag: [] };
+    session = { duration, correct: 0, wrong: 0, missed: 0, pages: 0 };
     trial = null;
     locked = false;
     setPhase('countdown', 'ui.ready');
@@ -281,22 +281,6 @@ export function mountGame() {
     $('play-panel').focus({ preventScroll: true });
     tick();
   }
-  function binaryAnswer() {
-    if (!session.binaryBag.length)
-      session.binaryBag = shuffle([
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        false,
-        false,
-        false,
-        false,
-      ]);
-    return session.binaryBag.pop();
-  }
   function nextTrial() {
     if (phase !== 'running') return;
     locked = false;
@@ -306,7 +290,7 @@ export function mountGame() {
     if (game.kind === 'search') {
       const targets = chooseTargets();
       const options = shuffle(searchIds.filter((id) => !targets.includes(id))).slice(0, 5);
-      const answer = binaryAnswer();
+      const answer = Math.random() < 0.5;
       if (answer) options[Math.floor(Math.random() * options.length)] = pick(targets);
       trial = { answer };
       drawSymbols($('target-row'), targets);
@@ -314,7 +298,7 @@ export function mountGame() {
     } else if (game.kind === 'comparison') {
       const first = shuffle(searchIds).slice(0, 3);
       const second = [...first];
-      const answer = binaryAnswer();
+      const answer = Math.random() < 0.5;
       if (!answer) {
         const index = Math.floor(Math.random() * first.length);
         second[index] = pick(searchIds.filter((id) => !first.includes(id)));
@@ -323,8 +307,7 @@ export function mountGame() {
       drawSymbols($('first-row'), first);
       drawSymbols($('second-row'), second);
     } else if (game.kind === 'coding') {
-      if (!session.digitBag.length) session.digitBag = shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9]);
-      const digit = session.digitBag.pop();
+      const digit = 1 + Math.floor(Math.random() * 9);
       trial = { answer: session.key[digit - 1] };
       I18n.text($('prompt-digit'), String(digit));
     } else {

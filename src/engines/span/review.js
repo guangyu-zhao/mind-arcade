@@ -19,12 +19,17 @@ export function judgmentReview(ctx, trials, describe) {
     previous = ctx.button('reviewPrevious'),
     next = ctx.button('reviewNext'),
     count = ctx.node('span');
-  let index = 0;
+  let index = 0,
+    renderedIndex = -1;
   function show(value) {
+    if (!root.open || value < 0 || value >= errors.length) return;
     index = value;
     const item = errors[index];
     I.text(heading, 'reviewItem', { level: item.level, n: item.number });
-    drawing.replaceChildren(item.drawing);
+    if (renderedIndex !== index) {
+      drawing.replaceChildren(item.drawing());
+      renderedIndex = index;
+    }
     I.text(actual, 'reviewYourAnswer', { answer: I.tr(item.answer) });
     I.text(expected, 'reviewExpected', {
       answer: item.expected.map((key) => I.tr(key)).join(' / '),
@@ -44,6 +49,5 @@ export function judgmentReview(ctx, trials, describe) {
   root.append(summary, body);
   // Resolve composed answer labels again after a language change without retaining old reviews.
   root.refreshLanguage = () => show(index);
-  show(0);
   return root;
 }

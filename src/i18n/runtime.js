@@ -116,8 +116,6 @@ export const GameI18n = {
 export const Text = Object.freeze({
   languages,
   locales,
-  choose,
-  refresh,
   t: (entry, values = {}) => translate(entry, values, language),
   get language() {
     return language;
