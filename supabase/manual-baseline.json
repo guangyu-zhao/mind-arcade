@@ -31,6 +31,11 @@
       "version": "202610220001",
       "file": "202610220001_rotation_characters.sql",
       "sha256": "490ad09d00c929b38cc9f459a4b30221d3637e22bd44c58e2cba0bafcd019ccb"
+    },
+    {
+      "version": "202610230001",
+      "file": "202610230001_validate_judgment_counts.sql",
+      "sha256": "b8013628c2d8feb66ca4c1c79a563e90f8098fc64a8910548239731df6f12015"
     }
   ]
 }

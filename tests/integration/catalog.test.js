@@ -68,11 +68,11 @@ test('manually applied migrations stay immutable and are explicitly tracked', as
   }
   const operations = await readFile('supabase/operations/register-existing-migrations.sql', 'utf8');
   const current = await readFile(
-    'supabase/migrations/202610220001_rotation_characters.sql',
+    'supabase/migrations/202610230001_validate_judgment_counts.sql',
     'utf8',
   );
   const body = current.split('as $$')[1].split('$$;')[0];
   const hash = createHash('md5').update(body.replace(/\s/g, '')).digest('hex');
   assert.ok(operations.includes(`('mind_lab_private.level_pass','${hash}')`));
-  assert.ok(operations.includes("('202610220001','rotation_characters'"));
+  assert.ok(operations.includes("('202610230001','validate_judgment_counts'"));
 });
