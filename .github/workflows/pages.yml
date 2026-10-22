@@ -37,6 +37,9 @@ jobs:
   database:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    permissions:
+      contents: read
+      packages: read
     env:
       SUPABASE_INTERNAL_IMAGE_REGISTRY: ghcr.io
     steps:
@@ -45,6 +48,10 @@ jobs:
         with:
           node-version: '22'
           cache: npm
+      - name: Authenticate container downloads
+        env:
+          REGISTRY_TOKEN: ${{ github.token }}
+        run: printf '%s' "$REGISTRY_TOKEN" | docker login ghcr.io --username "$GITHUB_ACTOR" --password-stdin
       - run: npm ci
       - run: node scripts/ci-command.mjs npm run db:start
         id: database
