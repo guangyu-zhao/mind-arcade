@@ -396,7 +396,6 @@ export function mountGame() {
   }
   G.init({
     slug: 'rotation-span',
-    version: VERSION,
     strings,
     levelPlan,
     run,

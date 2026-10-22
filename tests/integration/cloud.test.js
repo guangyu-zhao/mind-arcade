@@ -3,7 +3,8 @@ import assert from 'node:assert/strict';
 import { createCloudFixture } from '../fixtures/cloud.js';
 import { createAccount, identity, normalizeUsername } from '../../src/services/cloud/account.js';
 import { createScoreQueue, pendingPrefix } from '../../src/services/cloud/queue.js';
-import { createStatistics, contextKey } from '../../src/services/cloud/statistics.js';
+import { createStatistics } from '../../src/services/cloud/statistics.js';
+import { conditionKey } from '../../src/core/conditions.js';
 import { gamesById } from '../../src/catalog.js';
 const tick = () => new Promise((resolve) => setTimeout(resolve, 5));
 const store = () => {
@@ -271,8 +272,8 @@ test('statistics discard stale settings and accounts, clear personal data immedi
     await stats.refresh();
     assert.equal(stats.state.snapshot.history[0].value, 10);
     assert.equal(
-      contextKey(context()),
-      contextKey({ ...context(), rules: { size: 3, order: 'forward', mode: 'prefix' } }),
+      conditionKey(context()),
+      conditionKey({ ...context(), rules: { size: 3, order: 'forward', mode: 'prefix' } }),
     );
   } finally {
     stats.dispose();

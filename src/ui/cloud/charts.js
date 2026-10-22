@@ -16,7 +16,7 @@ export function createCharts(metric) {
       }) + (unit && m.unit ? ` ${m.unit}` : '')
     );
   }
-  function chartLabels(chart, vertical, horizontal, points, sample) {
+  function chartLabels(chart, vertical, horizontal, points, sample, { marker, nearest } = {}) {
     const figure = element('figure', 'cloud-figure');
     figure.append(
       element('div', 'cloud-axis-label', vertical),
@@ -32,7 +32,8 @@ export function createCharts(metric) {
     chart.setAttribute('tabindex', '0');
     chart.setAttribute('aria-keyshortcuts', 'ArrowLeft ArrowRight Home End Escape');
     function hide() {
-      if (selected >= 0) points[selected].node.classList.remove('is-inspected');
+      if (selected >= 0) points[selected].node?.classList.remove('is-inspected');
+      marker?.setAttribute('hidden', '');
       selected = -1;
       detail.hidden = true;
       chart.setAttribute('aria-label', label);
@@ -40,14 +41,20 @@ export function createCharts(metric) {
     }
     function show(index) {
       if (selected === index) return;
-      if (selected >= 0) points[selected].node.classList.remove('is-inspected');
+      if (selected >= 0) points[selected].node?.classList.remove('is-inspected');
       selected = index;
       chart.dataset.point = String(index);
       const point = points[index];
-      point.node.classList.add('is-inspected');
-      detail.textContent = point.detail;
+      point.node?.classList.add('is-inspected');
+      if (marker) {
+        marker.setAttribute('cx', point.x);
+        marker.setAttribute('cy', point.y);
+        marker.removeAttribute('hidden');
+      }
+      const description = typeof point.detail === 'function' ? point.detail() : point.detail;
+      detail.textContent = description;
       detail.hidden = false;
-      chart.setAttribute('aria-label', `${label}: ${point.detail}`);
+      chart.setAttribute('aria-label', `${label}: ${description}`);
       const rect = chart.getBoundingClientRect(),
         parent = figure.getBoundingClientRect();
       const x = (point.x / chart.viewBox.baseVal.width) * rect.width + rect.left - parent.left;
@@ -59,6 +66,10 @@ export function createCharts(metric) {
         view = chart.viewBox.baseVal;
       const x = ((event.clientX - rect.left) / rect.width) * view.width,
         y = ((event.clientY - rect.top) / rect.height) * view.height;
+      if (nearest) {
+        show(nearest(x));
+        return;
+      }
       let best = 0,
         distance = Infinity;
       points.forEach((point, index) => {
@@ -195,28 +206,48 @@ export function createCharts(metric) {
         svg('text', { x: left - 9, y: y(v) + 5, 'text-anchor': 'end' }, format(v, false, 1)),
       );
     }
+    const locale = Text.locale;
+    const points = rows.map((row) => ({
+      x: x(Date.parse(row.ended_at)),
+      y: y(row.value),
+      detail: () => `${new Date(row.ended_at).toLocaleString(locale)} · ${format(row.value)}`,
+    }));
+    const buckets = new Map();
+    points.forEach((point, index) => {
+      const column = Math.floor(point.x - left),
+        bucket = buckets.get(column);
+      if (!bucket) buckets.set(column, { first: index, last: index, min: index, max: index });
+      else {
+        bucket.last = index;
+        if (point.y < points[bucket.min].y) bucket.min = index;
+        if (point.y > points[bucket.max].y) bucket.max = index;
+      }
+    });
+    // Preserve each screen column's endpoints and extrema; inspection still uses every record.
+    const plotted = [...buckets.values()].flatMap((bucket) =>
+      [...new Set(Object.values(bucket))].sort((a, b) => a - b).map((index) => points[index]),
+    );
     chart.append(
       svg('polyline', {
-        points: rows.map((r) => `${x(Date.parse(r.ended_at))},${y(r.value)}`).join(' '),
+        points: plotted.map((point) => `${point.x},${point.y}`).join(' '),
         class: 'trend',
       }),
     );
-    const locale = Text.locale;
-    const points = rows.map((row) => {
-      const dot = svg('circle', {
-        cx: x(Date.parse(row.ended_at)),
-        cy: y(row.value),
-        r: 3.5,
-        class: 'point',
-      });
-      chart.append(dot);
-      return {
-        node: dot,
-        x: x(Date.parse(row.ended_at)),
-        y: y(row.value),
-        detail: `${new Date(row.ended_at).toLocaleString(locale)} · ${format(row.value)}`,
-      };
-    });
+    if (points.length <= 200)
+      for (const point of points)
+        chart.append(svg('circle', { cx: point.x, cy: point.y, r: 3.5, class: 'point' }));
+    const marker = svg('circle', { r: 4.5, class: 'point is-inspected', hidden: '' });
+    chart.append(marker);
+    function nearest(position) {
+      let low = 0,
+        high = points.length - 1;
+      while (low < high) {
+        const middle = Math.floor((low + high) / 2);
+        if (points[middle].x < position) low = middle + 1;
+        else high = middle;
+      }
+      return low > 0 && position - points[low - 1].x < points[low].x - position ? low - 1 : low;
+    }
     const sameDay = new Date(first).toDateString() === new Date(last).toDateString();
     const date = (t) =>
       new Date(t).toLocaleString(
@@ -240,6 +271,7 @@ export function createCharts(metric) {
       text('time'),
       points,
       Text.t('cloud.sample-runs', { n: formatCount(rows.length) }),
+      { marker, nearest },
     );
   }
   return {

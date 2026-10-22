@@ -472,7 +472,6 @@ export function mountGame() {
   }
   const config = {
     slug: setup.slug,
-    version: VERSION,
     strings,
     ...model,
     run,

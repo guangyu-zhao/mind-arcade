@@ -124,7 +124,9 @@ for (const ending of ['missed', 'error'])
     await expect(page.locator('body')).not.toHaveClass(/running/);
     await expect(page.locator('#final-score')).toHaveText('3');
     const [record] = await page.evaluate(() =>
-      JSON.parse(localStorage.getItem('mind-arcade.records.target-cancellation')),
+      Object.keys(localStorage)
+        .filter((key) => key.startsWith('mind-arcade.records.target-cancellation:'))
+        .map((key) => JSON.parse(localStorage.getItem(key)).record),
     );
     expect(record).toMatchObject({ score: 3, reason: ending });
     expect(record.elapsedMs).toBeLessThan(30000);
@@ -147,7 +149,9 @@ test('choice reaction accepts arrow keys and ends on the first wrong direction',
   await page.keyboard.press(nextLeft ? 'ArrowRight' : 'ArrowLeft');
   await expect(page.locator('body')).not.toHaveClass(/running/);
   const [record] = await page.evaluate(() =>
-    JSON.parse(localStorage.getItem('mind-arcade.records.choice-reaction')),
+    Object.keys(localStorage)
+      .filter((key) => key.startsWith('mind-arcade.records.choice-reaction:'))
+      .map((key) => JSON.parse(localStorage.getItem(key)).record),
   );
   expect(record).toMatchObject({ score: 1, reason: 'error' });
 });

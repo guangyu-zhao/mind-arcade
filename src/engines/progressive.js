@@ -520,7 +520,7 @@ const CognitiveGame = {
     });
 
     window.addEventListener('storage', (e) => {
-      if (e.key === RECORDS_KEY && e.newValue) {
+      if (e.key === RECORDS_KEY || e.key?.startsWith(`${RECORDS_KEY}:`)) {
         try {
           records = merge(records, Core.readRecords(RECORDS_KEY, validateRecords));
           history.updateContext();

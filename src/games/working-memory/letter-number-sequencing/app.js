@@ -538,7 +538,7 @@ export function mountGame() {
   window.addEventListener('pagehide', interrupt);
 
   window.addEventListener('storage', (event) => {
-    if (event.key !== RECORDS_KEY || !event.newValue) return;
+    if (event.key !== RECORDS_KEY && !event.key?.startsWith(`${RECORDS_KEY}:`)) return;
     try {
       records = mergeRecords(records, Core.readRecords(RECORDS_KEY, validateRecords));
       history.updateContext();

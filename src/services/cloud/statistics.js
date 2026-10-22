@@ -1,11 +1,5 @@
 import { errorKey } from './errors.js';
-export const contextKey = (value) =>
-  value
-    ? JSON.stringify([
-        value.rulesVersion,
-        Object.entries(value.rules).sort(([a], [b]) => a.localeCompare(b)),
-      ])
-    : '';
+import { conditionKey } from '../../core/conditions.js';
 export function createStatistics({ client, game, account, isRunning, onChange = () => {} }) {
   let context = null,
     snapshot = null,
@@ -120,7 +114,7 @@ export function createStatistics({ client, game, account, isRunning, onChange = 
       return { context, snapshot, error };
     },
     setContext(meta) {
-      const changed = contextKey(context) !== contextKey(meta);
+      const changed = conditionKey(context) !== conditionKey(meta);
       context = { rulesVersion: meta.rulesVersion, rules: { ...meta.rules } };
       if (changed) {
         snapshot = null;

@@ -418,7 +418,6 @@ export function mountGame() {
   }
   G.init({
     slug: 'symmetry-span-plus-plus',
-    version: VERSION,
     strings,
     getRules: () => ({ ...settings }),
     changeSettings,

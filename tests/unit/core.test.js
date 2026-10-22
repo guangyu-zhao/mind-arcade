@@ -81,6 +81,11 @@ test('damaged records are isolated without blocking valid history or future save
   assert.deepEqual(Core.mergeRecords([b], [a, b]), [a, b]);
   const values = new Map([['records', 'broken']]);
   global.localStorage = {
+    get length() {
+      return values.size;
+    },
+    key: (index) => [...values.keys()][index],
+    removeItem: (key) => values.delete(key),
     getItem: (key) => values.get(key) ?? null,
     setItem: (key, value) => values.set(key, value),
   };
@@ -106,7 +111,11 @@ test('damaged records are isolated without blocking valid history or future save
     assert.deepEqual(Core.saveRecords('records', [b], validate), [a, b]);
     assert.deepEqual(Core.saveRecords('records', [b], validate), [a, b]);
     assert.throws(() => Core.saveRecords('records', [{ id: 'invalid' }], validate));
-    assert.deepEqual(JSON.parse(values.get('records')), [a, b]);
+    assert.equal(values.has('records'), false);
+    assert.deepEqual(
+      ['a', 'b'].map((id) => JSON.parse(values.get(`records:${id}`)).record),
+      [a, b],
+    );
   } finally {
     delete global.localStorage;
   }

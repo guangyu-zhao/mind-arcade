@@ -40,7 +40,9 @@ test('a damaged local record does not prevent the next game from being saved', a
   await page.locator('#board button').filter({ hasText: /^1$/ }).click();
   await page.locator('#board button').filter({ hasText: /^3$/ }).click();
   const stored = await page.evaluate(() => ({
-    records: JSON.parse(localStorage.getItem('mind-arcade.records.schulte-table')),
+    records: Object.keys(localStorage)
+      .filter((key) => key.startsWith('mind-arcade.records.schulte-table:'))
+      .map((key) => JSON.parse(localStorage.getItem(key)).record),
     quarantine: JSON.parse(localStorage.getItem('mind-arcade.records.schulte-table.quarantine')),
   }));
   expect(stored.records).toHaveLength(1);

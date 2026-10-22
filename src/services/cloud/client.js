@@ -3,7 +3,8 @@ import { currentGame } from '../../catalog.js';
 import { cloudConfig } from './config.js';
 import { createAccount } from './account.js';
 import { createScoreQueue, pendingPrefix } from './queue.js';
-import { createStatistics, contextKey } from './statistics.js';
+import { createStatistics } from './statistics.js';
+import { conditionKey } from '../../core/conditions.js';
 import { mountCloudView } from '../../ui/cloud/view.js';
 import { connectScores } from '../../core/lifecycle.js';
 
@@ -71,8 +72,7 @@ export function mountCloud({
   };
   const storage = (event) => {
     if (event.key?.startsWith(pendingPrefix)) {
-      view.renderStatus();
-      void queue.flush();
+      queue.storageChanged(event);
     }
   };
   window.addEventListener('online', online);
@@ -86,7 +86,7 @@ export function mountCloud({
     begin: queue.begin,
     previousScores(meta) {
       const { context, snapshot, error } = statistics.state;
-      if (error || !snapshot || contextKey(context) !== contextKey(meta)) return null;
+      if (error || !snapshot || conditionKey(context) !== conditionKey(meta)) return null;
       return snapshot.history.map((row) => ({ score: row.value, endedAt: row.ended_at }));
     },
     submit(record, owner) {

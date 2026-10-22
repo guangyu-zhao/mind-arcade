@@ -96,7 +96,6 @@ export function createHistory({ version, rules, display, interrupt }) {
     }
   });
   return {
-    current,
     begin,
     finish,
     cancel,
