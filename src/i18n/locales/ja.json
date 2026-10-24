@@ -485,8 +485,6 @@
   "game.sequence-interference": "系列への干渉",
   "game.recall-positions": "位置の再現",
   "game.original": "元の位置",
-  "game.rotate-90": "90°回転 ↻",
-  "game.rotate-90-2": "90°回転 ↺",
   "game.rotate-90-clockwise": "時計回り90°回転",
   "game.rotate-90-counterclockwise": "反時計回り90°回転",
   "game.color-to-attend-to": "注目する色",
@@ -645,5 +643,15 @@
   "home.favorites": "お気に入り",
   "home.add-favorite": "{name} をお気に入りに追加",
   "home.remove-favorite": "{name} をお気に入りから削除",
-  "home.favorites-empty": "星を押すとゲームをお気に入りに追加できます。"
+  "home.favorites-empty": "星を押すとゲームをお気に入りに追加できます。",
+  "settings.title": "課題設定",
+  "settings.restore": "戻す",
+  "settings.restore-scale": "表示サイズを 100% に戻す",
+  "settings.scale-summary": "表示サイズ {value}%",
+  "settings.judgment": "判断",
+  "settings.recall": "記憶と再現",
+  "settings.judgment-summary": "判断：{value}",
+  "settings.tail-summary": "各系列の末尾 {value} 個",
+  "settings.clockwise": "↷ 90°",
+  "settings.counterclockwise": "↶ 90°"
 }

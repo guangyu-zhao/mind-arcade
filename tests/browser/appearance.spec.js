@@ -15,6 +15,7 @@ test('overview renders fixed three-column groups and a mobile game remains usabl
   await page.goto('Working-Memory/Picture-Span/');
   await expect(page.locator('html')).toHaveAttribute('data-ready', 'true');
   const slider = page.locator('#display-scale');
+  await page.locator('.task-settings-toggle').click();
   const before = await page.locator('#memory-frame').boundingBox();
   await slider.fill('50');
   await slider.dispatchEvent('input');
@@ -28,6 +29,7 @@ test('visual span keeps instructions and pagination readable when the pictures s
   await page.setViewportSize({ width: 320, height: 800 });
   await page.goto('Working-Memory/Picture-Span/');
   await expect(page.locator('html')).toHaveAttribute('data-ready', 'true');
+  await page.locator('.task-settings-toggle').click();
   await page.locator('#display-scale').fill('40');
   for (const language of ['zh', 'en', 'de', 'fr', 'ja', 'ko']) {
     await page.locator('[data-language-select]').selectOption(language, { force: true });

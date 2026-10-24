@@ -39,9 +39,11 @@ export async function generatePages({ output = resolve(root, '.generated') } = {
     const entry = [
       ...game.assets.styles.map((style) => `import '/${style}';`),
       "import { bootstrap } from '/src/bootstrap.js';",
+      "import { mountTaskSettings } from '/src/ui/settings.js';",
       'bootstrap();',
       `const { mountGame } = await import('/${game.assets.entry}');`,
       'mountGame();',
+      'mountTaskSettings();',
       "document.documentElement.dataset.ready = 'true';",
     ].join('\n');
     await mkdir(resolve(output, game.route), { recursive: true });

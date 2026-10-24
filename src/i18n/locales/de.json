@@ -485,8 +485,6 @@
   "game.sequence-interference": "Folgen-Ablenkung",
   "game.recall-positions": "Positionen wiedergeben",
   "game.original": "Unverändert",
-  "game.rotate-90": "90° drehen ↻",
-  "game.rotate-90-2": "90° drehen ↺",
   "game.rotate-90-clockwise": "90° im Uhrzeigersinn drehen",
   "game.rotate-90-counterclockwise": "90° gegen den Uhrzeigersinn drehen",
   "game.color-to-attend-to": "Beachte diese Farbe",
@@ -645,5 +643,15 @@
   "home.favorites": "Favoriten",
   "home.add-favorite": "{name} zu Favoriten hinzufügen",
   "home.remove-favorite": "{name} aus Favoriten entfernen",
-  "home.favorites-empty": "Markiere Spiele mit dem Stern als Favoriten."
+  "home.favorites-empty": "Markiere Spiele mit dem Stern als Favoriten.",
+  "settings.title": "Aufgabeneinstellungen",
+  "settings.restore": "Zurücksetzen",
+  "settings.restore-scale": "Größe auf 100 % zurücksetzen",
+  "settings.scale-summary": "Anzeigegröße {value} %",
+  "settings.judgment": "Beurteilung",
+  "settings.recall": "Merken & Wiedergeben",
+  "settings.judgment-summary": "Beurteilung: {value}",
+  "settings.tail-summary": "Letzte {value} je Folge",
+  "settings.clockwise": "↷ 90°",
+  "settings.counterclockwise": "↶ 90°"
 }

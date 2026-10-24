@@ -1,10 +1,4 @@
 @charset "UTF-8";
-.plus-settings {
-  gap: 18px;
-}
-.pattern-count-settings {
-  grid-column: 1 / -1;
-}
 .count-options {
   grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(max-content, 1fr);
 }
@@ -14,16 +8,12 @@
 .transform-options {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
-.interference-options {
-  display: grid;
-  gap: 16px;
-}
 .plus-settings .toggle-option {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  min-height: 32px;
+  min-height: 44px;
   font-size: 16px;
 }
 .toggle-option input {

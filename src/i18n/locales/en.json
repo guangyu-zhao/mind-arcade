@@ -485,8 +485,6 @@
   "game.sequence-interference": "Sequence interference",
   "game.recall-positions": "Recall positions",
   "game.original": "Original",
-  "game.rotate-90": "Rotate 90° ↻",
-  "game.rotate-90-2": "Rotate 90° ↺",
   "game.rotate-90-clockwise": "Rotate 90° clockwise",
   "game.rotate-90-counterclockwise": "Rotate 90° counterclockwise",
   "game.color-to-attend-to": "Color to attend to",
@@ -645,5 +643,15 @@
   "home.favorites": "Favorites",
   "home.add-favorite": "Add {name} to favorites",
   "home.remove-favorite": "Remove {name} from favorites",
-  "home.favorites-empty": "Use the stars to save your favorite games."
+  "home.favorites-empty": "Use the stars to save your favorite games.",
+  "settings.title": "Task settings",
+  "settings.restore": "Reset",
+  "settings.restore-scale": "Reset size to 100%",
+  "settings.scale-summary": "Display size {value}%",
+  "settings.judgment": "Judgment",
+  "settings.recall": "Memory & recall",
+  "settings.judgment-summary": "Judgment: {value}",
+  "settings.tail-summary": "Last {value} per stream",
+  "settings.clockwise": "↷ 90°",
+  "settings.counterclockwise": "↶ 90°"
 }

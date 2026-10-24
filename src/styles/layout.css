@@ -217,17 +217,22 @@ h2 {
 }
 .display-scale-control {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) 46px;
+  grid-template-columns: minmax(0, 1fr) minmax(56px, auto);
+  grid-template-rows: 44px 44px;
   align-items: center;
-  gap: 10px;
+  gap: 0 12px;
   margin-top: 20px;
   color: var(--muted);
   font-size: 16px;
 }
 .display-scale-control label {
+  grid-row: 1;
+  grid-column: 1;
   cursor: pointer;
 }
 .display-scale-control input {
+  grid-row: 2;
+  grid-column: 1;
   width: 100%;
   min-width: 0;
   height: 40px;
@@ -240,6 +245,8 @@ h2 {
   opacity: 0.5;
 }
 .display-scale-control output {
+  grid-row: 2;
+  grid-column: 2;
   color: var(--accent);
   text-align: right;
   font-variant-numeric: tabular-nums;

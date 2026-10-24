@@ -122,6 +122,7 @@ for (const id of ['arithmetic-updating', 'spatial-updating', 'multi-stream-runni
     });
     await pauseClock(page);
     await fixturePage(page, gamesById.get(id), 'fixture=progressive');
+    await page.locator('.task-settings-toggle').click();
     await page.locator('#display-scale').fill('40');
     const font = await page
       .locator('.stage-center p')

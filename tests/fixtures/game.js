@@ -1,4 +1,5 @@
 import { bootstrap } from '../../src/bootstrap.js';
+import { mountTaskSettings } from '../../src/ui/settings.js';
 import { currentGame } from '../../src/catalog.js';
 import { createCloudFixture } from './cloud.js';
 const game = currentGame(),
@@ -46,6 +47,7 @@ if (params.get('fixture') === 'visual') {
   const { mountGame } = await import(/* @vite-ignore */ '/mind-arcade/' + game.assets.entry);
   mountGame();
 }
+mountTaskSettings();
 
 window.fixture.ready = true;
 

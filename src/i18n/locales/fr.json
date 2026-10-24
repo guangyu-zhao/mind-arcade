@@ -485,8 +485,6 @@
   "game.sequence-interference": "Interférence de séquence",
   "game.recall-positions": "Positions à rappeler",
   "game.original": "D’origine",
-  "game.rotate-90": "Rotation 90° ↻",
-  "game.rotate-90-2": "Rotation 90° ↺",
   "game.rotate-90-clockwise": "Rotation de 90° dans le sens horaire",
   "game.rotate-90-counterclockwise": "Rotation de 90° dans le sens antihoraire",
   "game.color-to-attend-to": "Couleur à suivre",
@@ -645,5 +643,15 @@
   "home.favorites": "Favoris",
   "home.add-favorite": "Ajouter {name} aux favoris",
   "home.remove-favorite": "Retirer {name} des favoris",
-  "home.favorites-empty": "Utilisez les étoiles pour ajouter vos jeux favoris."
+  "home.favorites-empty": "Utilisez les étoiles pour ajouter vos jeux favoris.",
+  "settings.title": "Réglages du jeu",
+  "settings.restore": "Rétablir",
+  "settings.restore-scale": "Rétablir la taille à 100 %",
+  "settings.scale-summary": "Taille d’affichage : {value} %",
+  "settings.judgment": "Jugement",
+  "settings.recall": "Mémoire et rappel",
+  "settings.judgment-summary": "Jugement : {value}",
+  "settings.tail-summary": "Les {value} derniers par série",
+  "settings.clockwise": "↷ 90°",
+  "settings.counterclockwise": "↶ 90°"
 }

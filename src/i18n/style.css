@@ -15,17 +15,6 @@
 .size-options span {
   overflow-wrap: anywhere;
 }
-.display-scale-control {
-  grid-template-columns: minmax(0, auto) minmax(60px, 1fr) 46px;
-}
-html:lang(de) .display-scale-control,
-html:lang(fr) .display-scale-control {
-  grid-template-columns: minmax(0, 1fr) 46px;
-}
-html:lang(de) .display-scale-control label,
-html:lang(fr) .display-scale-control label {
-  grid-column: 1 / -1;
-}
 .game-card h3 {
   overflow-wrap: anywhere;
 }

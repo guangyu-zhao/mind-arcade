@@ -60,84 +60,94 @@
               <label><input type="radio" name="size" value="6" /><span>6 × 6</span></label>
             </div>
           </fieldset>
-          <fieldset class="pattern-count-settings">
-            <legend data-l10n="flashCount">判断格数</legend>
-            <div class="segmented count-options">
-              <label
-                ><input type="radio" name="flashCount" value="2" checked="" /><span>2</span></label
-              >
-              <label><input type="radio" name="flashCount" value="4" /><span>4</span></label>
-              <label><input type="radio" name="flashCount" value="6" /><span>6</span></label>
-              <label
-                ><input type="radio" name="flashCount" value="random" /><span data-l10n="random"
-                  >随机</span
-                ></label
-              >
-            </div>
-          </fieldset>
-          <fieldset class="interference-options">
-            <label class="toggle-option"
-              ><span data-l10n="symmetryInterference">对称干扰</span
-              ><input type="checkbox" name="symmetryInterference" role="switch" /><span
-                class="toggle-track"
-                aria-hidden="true"
-              ></span
-            ></label>
-            <label class="toggle-option"
-              ><span data-l10n="sequenceInterference">序列干扰</span
-              ><input type="checkbox" name="sequenceInterference" role="switch" /><span
-                class="toggle-track"
-                aria-hidden="true"
-              ></span
-            ></label>
-          </fieldset>
-          <fieldset>
-            <legend data-l10n="recallDirection">复现顺序</legend>
-            <div class="segmented">
-              <label
-                ><input type="radio" name="order" value="forward" checked="" /><span
-                  data-l10n="forward"
-                  >正序</span
-                ></label
-              >
-              <label
-                ><input type="radio" name="order" value="reverse" /><span data-l10n="reverse"
-                  >倒序</span
-                ></label
-              >
-            </div>
-          </fieldset>
-          <fieldset>
-            <legend data-l10n="recallTransform">复现位置</legend>
-            <div class="segmented transform-options">
-              <label
-                ><input
-                  type="radio"
-                  name="transform"
-                  value="counterclockwise"
-                  data-l10n-aria="rotateCounterclockwise"
-                  aria-label="逆时针旋转 90°"
-                  data-i18n-attrs='{"aria-label":"game.rotate-90-counterclockwise"}'
-                /><span data-l10n="counterclockwise">逆时针 90°</span></label
-              >
-              <label
-                ><input type="radio" name="transform" value="original" checked="" /><span
-                  data-l10n="original"
-                  >原始</span
-                ></label
-              >
-              <label
-                ><input
-                  type="radio"
-                  name="transform"
-                  value="rotated"
-                  data-l10n-aria="rotateClockwise"
-                  aria-label="顺时针旋转 90°"
-                  data-i18n-attrs='{"aria-label":"game.rotate-90-clockwise"}'
-                /><span data-l10n="rotated">顺时针 90°</span></label
-              >
-            </div>
-          </fieldset>
+          <div class="settings-group">
+            <h3 data-i18n="settings.judgment">判断</h3>
+            <fieldset data-summary-format="settings.judgment-summary">
+              <legend data-l10n="flashCount">判断格数</legend>
+              <div class="segmented count-options">
+                <label
+                  ><input type="radio" name="flashCount" value="2" checked="" /><span
+                    >2</span
+                  ></label
+                >
+                <label><input type="radio" name="flashCount" value="4" /><span>4</span></label>
+                <label><input type="radio" name="flashCount" value="6" /><span>6</span></label>
+                <label
+                  ><input type="radio" name="flashCount" value="random" /><span data-l10n="random"
+                    >随机</span
+                  ></label
+                >
+              </div>
+            </fieldset>
+            <fieldset>
+              <label class="toggle-option"
+                ><span data-l10n="symmetryInterference">对称干扰</span
+                ><input type="checkbox" name="symmetryInterference" role="switch" /><span
+                  class="toggle-track"
+                  aria-hidden="true"
+                ></span
+              ></label>
+            </fieldset>
+          </div>
+          <div class="settings-group">
+            <h3 data-i18n="settings.recall">记忆与复现</h3>
+            <fieldset>
+              <label class="toggle-option"
+                ><span data-l10n="sequenceInterference">序列干扰</span
+                ><input type="checkbox" name="sequenceInterference" role="switch" /><span
+                  class="toggle-track"
+                  aria-hidden="true"
+                ></span
+              ></label>
+            </fieldset>
+            <fieldset>
+              <legend data-l10n="recallDirection">复现顺序</legend>
+              <div class="segmented">
+                <label
+                  ><input type="radio" name="order" value="forward" checked="" /><span
+                    data-l10n="forward"
+                    >正序</span
+                  ></label
+                >
+                <label
+                  ><input type="radio" name="order" value="reverse" /><span data-l10n="reverse"
+                    >倒序</span
+                  ></label
+                >
+              </div>
+            </fieldset>
+            <fieldset>
+              <legend data-l10n="recallTransform">复现位置</legend>
+              <div class="segmented transform-options">
+                <label
+                  ><input
+                    type="radio"
+                    name="transform"
+                    value="counterclockwise"
+                    data-l10n-aria="rotateCounterclockwise"
+                    aria-label="逆时针旋转 90°"
+                    data-i18n-attrs='{"aria-label":"game.rotate-90-counterclockwise"}'
+                  /><span data-l10n="counterclockwise">↶ 90°</span></label
+                >
+                <label
+                  ><input type="radio" name="transform" value="original" checked="" /><span
+                    data-l10n="original"
+                    >原始</span
+                  ></label
+                >
+                <label
+                  ><input
+                    type="radio"
+                    name="transform"
+                    value="rotated"
+                    data-l10n-aria="rotateClockwise"
+                    aria-label="顺时针旋转 90°"
+                    data-i18n-attrs='{"aria-label":"game.rotate-90-clockwise"}'
+                  /><span data-l10n="rotated">↷ 90°</span></label
+                >
+              </div>
+            </fieldset>
+          </div>
         </form>
         <details id="help" class="help">
           <summary data-l10n="how">玩法</summary>

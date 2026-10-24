@@ -485,8 +485,6 @@
   "game.sequence-interference": "순서 간섭",
   "game.recall-positions": "위치 재현",
   "game.original": "원래 위치",
-  "game.rotate-90": "90° 회전 ↻",
-  "game.rotate-90-2": "90° 회전 ↺",
   "game.rotate-90-clockwise": "시계 방향 90° 회전",
   "game.rotate-90-counterclockwise": "반시계 방향 90° 회전",
   "game.color-to-attend-to": "주목할 색",
@@ -645,5 +643,15 @@
   "home.favorites": "즐겨찾기",
   "home.add-favorite": "{name} 즐겨찾기에 추가",
   "home.remove-favorite": "{name} 즐겨찾기에서 삭제",
-  "home.favorites-empty": "별표를 눌러 게임을 즐겨찾기에 추가하세요."
+  "home.favorites-empty": "별표를 눌러 게임을 즐겨찾기에 추가하세요.",
+  "settings.title": "과제 설정",
+  "settings.restore": "초기화",
+  "settings.restore-scale": "표시 크기를 100%로 초기화",
+  "settings.scale-summary": "표시 크기 {value}%",
+  "settings.judgment": "판단",
+  "settings.recall": "기억과 재현",
+  "settings.judgment-summary": "판단: {value}",
+  "settings.tail-summary": "각 흐름의 마지막 {value}개",
+  "settings.clockwise": "↷ 90°",
+  "settings.counterclockwise": "↶ 90°"
 }
