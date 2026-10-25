@@ -1,0 +1,62 @@
+<div class="page">
+  {{header}}
+  <main>
+    <section class="workspace">
+      <div class="board-panel">
+        <div class="board-top">
+          <span id="phase" role="status" data-l10n="ready">准备开始</span><span id="counter"></span>
+        </div>
+        <div id="stage-frame" class="stage-frame"><div id="stage" class="stage"></div></div>
+        <div class="board-bottom">
+          <span id="hint"></span
+          ><span id="lives" class="lives" role="img" aria-label="剩余 3 次机会"></span>
+        </div>
+        <div id="toolbar" class="toolbar"></div>
+      </div>
+      <aside class="sidebar">
+        <div class="score-block">
+          <div class="score-label" data-i18n="span.highest-cleared-level">最高通过等级</div>
+          <div class="score">
+            <strong id="score">0</strong><span id="score-unit" data-l10n="levelUnit">级</span>
+          </div>
+          <p id="result-note" aria-live="polite"></p>
+          <button type="button" id="action" class="button primary">
+            <span id="action-label" data-l10n="start">开始</span
+            ><svg
+              id="action-icon"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.7"
+              aria-hidden="true"
+            >
+              <path d="M5 12h14m-6-6 6 6-6 6"></path>
+            </svg>
+          </button>
+        </div>
+        <div class="display-scale-control">
+          <label for="display-scale" data-l10n="displayScale">显示大小</label>
+          <input
+            type="range"
+            id="display-scale"
+            min="40"
+            max="100"
+            step="5"
+            value="100"
+            aria-controls="stage"
+            aria-valuetext="100%"
+          />
+          <output id="display-scale-value" for="display-scale">100%</output>
+        </div>
+        <details id="help" class="help">
+          <summary data-l10n="how">玩法</summary>
+          <div id="help-content"></div>
+        </details>
+      </aside>
+    </section>
+  </main>
+  <p id="notice" class="notice" role="status" hidden=""></p>
+  <noscript>请启用 JavaScript。 / Please enable JavaScript.</noscript>
+</div>

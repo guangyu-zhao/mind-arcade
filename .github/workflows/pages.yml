@@ -1,0 +1,74 @@
+name: Check and publish Mind Arcade
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: mind-arcade-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: node scripts/ci-command.mjs npm run check
+      - run: npx playwright install --with-deps chromium
+      - run: node scripts/ci-command.mjs npm run test:browser
+      - run: node scripts/ci-command.mjs npm run test:built
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: browser-failures
+          path: |
+            test-results
+            test-results-built
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist
+  database:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Authenticate container downloads
+        env:
+          REGISTRY_TOKEN: ${{ github.token }}
+        run: printf '%s' "$REGISTRY_TOKEN" | docker login ghcr.io --username "$GITHUB_ACTOR" --password-stdin
+      - run: npm ci
+      - run: node scripts/ci-command.mjs npm run db:start
+        id: database
+      - run: node scripts/ci-command.mjs npm run db:lint
+      - run: node scripts/ci-command.mjs npm run db:test
+        if: ${{ !cancelled() && steps.database.outcome == 'success' }}
+      - if: always()
+        run: npx supabase stop --no-backup
+  deploy:
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    needs: [check, database]
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/configure-pages@v5
+      - uses: actions/deploy-pages@v4
+        id: deployment

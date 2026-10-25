@@ -1,0 +1,161 @@
+<div class="page">
+  {{header}}
+  <main>
+    <section class="workspace">
+      <div class="board-panel">
+        <div class="board-top">
+          <span id="phase" role="status" data-l10n="ready">准备开始</span><span id="counter"></span>
+        </div>
+        <div id="stage-frame" class="stage-frame"><div id="stage" class="stage"></div></div>
+        <div class="board-bottom">
+          <span id="hint"></span
+          ><span id="lives" class="lives" role="img" aria-label="剩余 3 次机会"></span>
+        </div>
+        <div id="toolbar" class="toolbar"></div>
+      </div>
+      <aside class="sidebar">
+        <div class="score-block">
+          <div class="score-label" data-i18n="span.highest-cleared-level">最高通过等级</div>
+          <div class="score">
+            <strong id="score">0</strong><span id="score-unit" data-l10n="levelUnit">级</span>
+          </div>
+          <p id="result-note" aria-live="polite"></p>
+          <button type="button" id="action" class="button primary">
+            <span id="action-label" data-l10n="start">开始</span
+            ><svg
+              id="action-icon"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.7"
+              aria-hidden="true"
+            >
+              <path d="M5 12h14m-6-6 6 6-6 6"></path>
+            </svg>
+          </button>
+        </div>
+        <div class="display-scale-control">
+          <label for="display-scale" data-l10n="displayScale">显示大小</label>
+          <input
+            type="range"
+            id="display-scale"
+            min="40"
+            max="100"
+            step="5"
+            value="100"
+            aria-controls="stage"
+            aria-valuetext="100%"
+          />
+          <output id="display-scale-value" for="display-scale">100%</output>
+        </div>
+        <form id="settings" class="settings plus-settings">
+          <fieldset>
+            <legend data-l10n="gridSize">棋盘大小</legend>
+            <div class="segmented">
+              <label
+                ><input type="radio" name="size" value="4" checked="" /><span>4 × 4</span></label
+              >
+              <label><input type="radio" name="size" value="6" /><span>6 × 6</span></label>
+            </div>
+          </fieldset>
+          <div class="settings-group">
+            <h3 data-i18n="settings.judgment">判断</h3>
+            <fieldset data-summary-format="settings.judgment-summary">
+              <legend data-l10n="flashCount">判断格数</legend>
+              <div class="segmented count-options">
+                <label
+                  ><input type="radio" name="flashCount" value="2" checked="" /><span
+                    >2</span
+                  ></label
+                >
+                <label><input type="radio" name="flashCount" value="4" /><span>4</span></label>
+                <label><input type="radio" name="flashCount" value="6" /><span>6</span></label>
+                <label
+                  ><input type="radio" name="flashCount" value="random" /><span data-l10n="random"
+                    >随机</span
+                  ></label
+                >
+              </div>
+            </fieldset>
+            <fieldset>
+              <label class="toggle-option"
+                ><span data-l10n="symmetryInterference">对称干扰</span
+                ><input type="checkbox" name="symmetryInterference" role="switch" /><span
+                  class="toggle-track"
+                  aria-hidden="true"
+                ></span
+              ></label>
+            </fieldset>
+          </div>
+          <div class="settings-group">
+            <h3 data-i18n="settings.recall">记忆与复现</h3>
+            <fieldset>
+              <label class="toggle-option"
+                ><span data-l10n="sequenceInterference">序列干扰</span
+                ><input type="checkbox" name="sequenceInterference" role="switch" /><span
+                  class="toggle-track"
+                  aria-hidden="true"
+                ></span
+              ></label>
+            </fieldset>
+            <fieldset>
+              <legend data-l10n="recallDirection">复现顺序</legend>
+              <div class="segmented">
+                <label
+                  ><input type="radio" name="order" value="forward" checked="" /><span
+                    data-l10n="forward"
+                    >正序</span
+                  ></label
+                >
+                <label
+                  ><input type="radio" name="order" value="reverse" /><span data-l10n="reverse"
+                    >倒序</span
+                  ></label
+                >
+              </div>
+            </fieldset>
+            <fieldset>
+              <legend data-l10n="recallTransform">复现位置</legend>
+              <div class="segmented transform-options">
+                <label
+                  ><input
+                    type="radio"
+                    name="transform"
+                    value="counterclockwise"
+                    data-l10n-aria="rotateCounterclockwise"
+                    aria-label="逆时针旋转 90°"
+                    data-i18n-attrs='{"aria-label":"game.rotate-90-counterclockwise"}'
+                  /><span data-l10n="counterclockwise">↶ 90°</span></label
+                >
+                <label
+                  ><input type="radio" name="transform" value="original" checked="" /><span
+                    data-l10n="original"
+                    >原始</span
+                  ></label
+                >
+                <label
+                  ><input
+                    type="radio"
+                    name="transform"
+                    value="rotated"
+                    data-l10n-aria="rotateClockwise"
+                    aria-label="顺时针旋转 90°"
+                    data-i18n-attrs='{"aria-label":"game.rotate-90-clockwise"}'
+                  /><span data-l10n="rotated">↷ 90°</span></label
+                >
+              </div>
+            </fieldset>
+          </div>
+        </form>
+        <details id="help" class="help">
+          <summary data-l10n="how">玩法</summary>
+          <div id="help-content"></div>
+        </details>
+      </aside>
+    </section>
+  </main>
+  <p id="notice" class="notice" role="status" hidden=""></p>
+  <noscript>请启用 JavaScript。 / Please enable JavaScript.</noscript>
+</div>

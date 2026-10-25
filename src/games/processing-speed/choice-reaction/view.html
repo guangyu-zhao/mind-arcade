@@ -1,0 +1,104 @@
+<div class="page">
+  {{header}}
+  <main>
+    <section
+      class="workspace"
+      aria-label="练习区域"
+      data-i18n-attrs='{"aria-label":"ui.practice-area"}'
+    >
+      <div class="board-panel">
+        <div class="board-top">
+          <span id="phase-label" class="phase-label" role="status" data-i18n="ui.ready"
+            >准备开始</span
+          ><span id="attempt-count" class="attempt-count"></span>
+        </div>
+        <div class="task-stage" id="task-stage">
+          <div id="idle-panel" class="stage-view idle-view">
+            <div id="idle-sample" class="stimulus" aria-hidden="true"></div>
+            <h2 data-i18n="ui.choose-the-direction-of-the-arrow">看到箭头，选择对应方向</h2>
+          </div>
+          <div id="countdown-panel" class="stage-view countdown-view" tabindex="-1" hidden="">
+            <strong id="countdown-value" aria-live="assertive">3</strong>
+          </div>
+          <div
+            id="play-panel"
+            class="stage-view"
+            tabindex="-1"
+            aria-label="作答区域"
+            hidden=""
+            data-i18n-attrs='{"aria-label":"ui.response-area"}'
+          >
+            <div id="stimulus" class="stimulus" aria-hidden="true"></div>
+            <div
+              id="answers"
+              class="answer-options"
+              role="group"
+              aria-label="选择答案"
+              data-i18n-attrs='{"aria-label":"ui.choose-an-answer"}'
+            ></div>
+          </div>
+          <div id="result-panel" class="stage-view result-view" hidden="">
+            <h2 id="finish-title" data-i18n="ui.game-over">本局结束</h2>
+            <div class="result-score">
+              <strong id="final-score">—</strong><span id="final-unit"></span>
+            </div>
+          </div>
+        </div>
+        <div class="board-bottom"><span id="board-hint"></span></div>
+        <div
+          id="progress"
+          class="progress"
+          role="progressbar"
+          aria-label="计时进度"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          aria-valuenow="0"
+          data-i18n-attrs='{"aria-label":"ui.time-elapsed"}'
+        >
+          <span id="progress-fill"></span>
+        </div>
+      </div>
+      <aside class="sidebar">
+        <div class="timer-block">
+          <div class="timer-heading">
+            <span data-i18n="ui.time-remaining">剩余时间</span
+            ><span class="status-dot" aria-hidden="true"></span>
+          </div>
+          <div
+            class="timer"
+            id="timer-main"
+            role="timer"
+            aria-label="剩余时间"
+            data-i18n-attrs='{"aria-label":"ui.time-remaining"}'
+          >
+            00:30
+          </div>
+          <p id="result-note" aria-live="polite"></p>
+          <button type="button" id="action" class="primary-button">
+            <span id="action-label" data-i18n="ui.start">开始</span
+            ><svg
+              id="action-icon"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.7"
+              aria-hidden="true"
+            >
+              <path d="M5 12h14m-6-6 6 6-6 6"></path>
+            </svg>
+          </button>
+        </div>
+
+        <details class="help">
+          <summary data-i18n="ui.instructions">玩法说明</summary>
+          <p data-i18n="rules.choice"></p>
+          <p data-i18n="rules.timed"></p>
+        </details>
+      </aside>
+    </section>
+  </main>
+  <p id="notice" class="notice" role="status" hidden=""></p>
+  <noscript>请启用 JavaScript 后开始练习。 / Enable JavaScript to start practicing.</noscript>
+</div>

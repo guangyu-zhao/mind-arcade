@@ -1,0 +1,56 @@
+{
+  "project": "yjzdcjiuiddhvwmcwmms",
+  "method": "SQL Editor; confirmed by project owner",
+  "migrations": [
+    {
+      "version": "202610160001",
+      "file": "202610160001_cloud_scores.sql",
+      "sha256": "6e185d2e3978aee77119ca243d83ff3098962809d6cf5e95bfdc2243eee83581"
+    },
+    {
+      "version": "202610160002",
+      "file": "202610160002_simplify_statistics.sql",
+      "sha256": "2ef2bf1115289c4e40ae1a6e2b0990cf998b396733aaad2d4a7eee35d2d20197"
+    },
+    {
+      "version": "202610170001",
+      "file": "202610170001_fix_tracking_score_validation.sql",
+      "sha256": "0fc9f9f1f59ce645bed23b886c46d4a64bd3120f46d60be9f8d5feb41df70da7"
+    },
+    {
+      "version": "202610170002",
+      "file": "202610170002_current_rules.sql",
+      "sha256": "42be877cfb5e3b4168325dd9c37ecaf7d96a46ab9f9fccfec38b534210a0f371"
+    },
+    {
+      "version": "202610170003",
+      "file": "202610170003_population_recent_five.sql",
+      "sha256": "7e1c9b61cda97883307a4e734ca83c0c1c944d9aef7b8e73adb0a7713ec94399"
+    },
+    {
+      "version": "202610220001",
+      "file": "202610220001_rotation_characters.sql",
+      "sha256": "490ad09d00c929b38cc9f459a4b30221d3637e22bd44c58e2cba0bafcd019ccb"
+    },
+    {
+      "version": "202610230001",
+      "file": "202610230001_validate_judgment_counts.sql",
+      "sha256": "b8013628c2d8feb66ca4c1c79a563e90f8098fc64a8910548239731df6f12015"
+    },
+    {
+      "version": "202610230002",
+      "file": "202610230002_validate_updating_tracking.sql",
+      "sha256": "d111d272ebdf8442e7df7b5e8a08b6cd0d117af6902ce3fe1e51f8df5cacd8ca"
+    },
+    {
+      "version": "202610250001",
+      "file": "202610250001_validate_symmetry_plus_settings.sql",
+      "sha256": "c3974579be2e00f141dbb73249ca306622e2d00212d71cf042830619be44fcbd"
+    },
+    {
+      "version": "202610250002",
+      "file": "202610250002_mn_back.sql",
+      "sha256": "2abb0b8d7dabcd7f5a50fd856ee4b1eb4b34088061a8f4f9b422a21730f93e49"
+    }
+  ]
+}

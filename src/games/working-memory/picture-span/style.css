@@ -1,0 +1,9 @@
+.picture-game .study-card,
+.picture-game .choice-card {
+  background: #faf8f5;
+  border-color: #ede7df;
+}
+.picture-game .choice-card:not(:disabled):hover {
+  background: #f3eee7;
+  border-color: #cfbfb0;
+}

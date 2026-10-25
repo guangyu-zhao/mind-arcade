@@ -1,0 +1,35 @@
+.language-switch {
+  display: inline-flex;
+  padding: 0;
+  background: transparent;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+.brand {
+  min-width: 0;
+}
+.brand h1 {
+  overflow-wrap: anywhere;
+}
+.segmented span,
+.size-options span {
+  overflow-wrap: anywhere;
+}
+.game-card h3 {
+  overflow-wrap: anywhere;
+}
+.cloud-panel h2 {
+  overflow-wrap: anywhere;
+}
+.board-top > *,
+.board-bottom > * {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.answer-options button > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.color-swatch {
+  flex-shrink: 0;
+}

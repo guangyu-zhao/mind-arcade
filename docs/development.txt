@@ -1,0 +1,90 @@
+思维游乐场 · 开发与发布
+
+安装与开发
+  npm ci
+  npm run dev
+  打开终端输出的地址，并进入 /mind-arcade/。
+
+检查与预览
+  npm run check          格式、静态分析、单元/集成测试、生产构建
+  npm run test:browser   Playwright 浏览器回归
+  npm run preview       预览 dist 中的生产构建
+  Linux 首次运行浏览器测试：npx playwright install --with-deps chromium
+  macOS 默认使用已安装的 Google Chrome。
+
+结构
+  src/catalog.js        游戏 ID、分类、公开路径、规则版本、指标、入口和样式
+  src/games/            各游戏的视图、规则、素材；目录名统一为小写
+  src/pages/home/       总览首页；构建后直接生成根目录 index.html，无跳转页
+  src/engines/          共享的广度、加工速度、反应和更新任务引擎
+  src/core/             随机序列、记录验证与合并、场次元数据和提交生命周期
+  src/services/cloud/   Supabase 账户、上传队列、统计查询；接受可注入的客户端
+  src/ui/               头部模板、自定义选择框、账户对话框和统计图
+  src/i18n/locales/     六种语言的固定 ID 词典；Stroop 刺激语言单独处理
+  public/               原样发布的图标与 .nojekyll
+  scripts/              从目录配置和公共模板生成多页面入口
+  tests/                unit、integration、browser 及仅供测试的 fixtures
+  supabase/             本地配置、版本化 SQL 迁移、数据库测试
+  .generated/、dist/    自动生成，不手动修改，不提交 Git
+
+新增游戏
+  1. 在 src/games/<category>/<game>/ 下增加 view.html、规则/入口模块。
+  2. 在 catalog.js 登记一项，配置稳定 ID、URL、版本、共享或独立引擎和样式。
+  3. 在 public/<原始URL>/ 放 favicon.svg，给六份词典增加相同的文本 ID。
+  4. 数据库支持通过新的时间戳迁移添加；不要修改已经执行过的迁移。
+  5. 运行检查。首页分类、数量、卡片和页面入口由构建自动生成。
+
+成绩与账号
+  仅接收当前规则的成绩。浏览器打开网站时移除旧成绩和旧上传队列，保留账号。
+  账号身份的内部命名保持不变；当前成绩使用统一的 mind-arcade.records.* 存储键。
+  mergeRecords 不触发上传；场次开始捕获账户，结束后显式 commitRecord。
+  匿名场次不会因中途登录而归入账户，恢复当前记录也不会重复提交。
+  全局分布：在当前玩法下，每个账号最近 5 局的平均分作为一个数据点；不足 5 局使用已有成绩。
+  个人分布和历史曲线使用本人在当前玩法下的全部云端成绩。
+  局末比较按场次开始时的账号和玩法隔离，并参考当时已加载的个人云端历史。
+  缩放与屏幕尺寸不拆分玩法；云端历史未加载时不宣称刷新最高分。
+  本地记录逐条验证，损坏条目隔离到同名 .quarantine 键，保留其余成绩。
+  中断对局、首题完成前取消的对局不保存或上传；读取本地历史时自动清理已有的这些记录。
+  收藏存于当前浏览器的 mind-arcade.favorites，不上传到账户。
+
+配置与发布
+  .env.example 仅包含允许公开的 URL 和 publishable key。机密密钥不能使用 VITE_ 前缀。
+  .env.test 关闭真实云端连接，浏览器测试使用独立的模拟客户端。
+  GitHub Pages 来源为 GitHub Actions。推送 main 后，唯一的 pages.yml 流程
+  依次检查前端和独立数据库，再发布 dist。Pull request 只检查，不发布。
+  源码、测试、SQL 和本地配置不进入 Pages 发布产物。
+  首页和游戏入口均使用目录地址（末尾 /），各目录的 index.html 由静态托管自动读取。
+  直接访问 index.html 时，前端会原地整理地址，保留查询参数和锚点。
+
+数据库
+  Docker 启动后：npm run db:start；npm run db:lint；npm run db:test。
+  数据库测试在本地事务中验证权限、账户隔离、幂等提交和当前规则的统计。
+  GitHub Actions 的数据库任务只创建临时本地数据库，不连接生产项目。
+  manual-baseline.json 记录用户已确认在 SQL Editor 执行的迁移及其校验值。
+  生产项目已由用户确认执行 202610170002_current_rules.sql，
+  已清理旧规则成绩和旧统计表，保留账号及当前规则成绩。
+  既有项目接入 CLI 前，运行 operations/register-existing-migrations.sql：
+  它核对现有函数内容、统计索引和 RLS，匹配后才登记迁移历史，不重跑建表脚本。
+  之后在本机通过 Supabase CLI 登录并 link 到 yjzdcjiuiddhvwmcwmms；
+  先查看 migration list 和 db push --dry-run，再按实际变更执行 db push。
+  数据库测试覆盖各类等级任务的校验，并验证多物体追踪可以保存成绩。
+  rotation-characters.sql 覆盖前端当前生成的全部字符，防止字符池和后端校验不同步。
+  population.sql 验证每人最近五局均分、玩法隔离、个人完整历史与匿名访问边界。
+
+当前规则更新
+  202610170002_current_rules.sql 已在生产项目执行；当前规则版本为 arcade-20261017。
+  只记录答对数量或达到的等级，不再计算反应时、正确率或净正确数。
+
+统计口径更新
+  202610170003_population_recent_five.sql 将全局分布改为每个账号最近 5 局的均分。
+  已由用户确认在生产项目执行，公开查询已返回新口径；全部成绩保留。
+  前端仅在查询返回 recent-five-mean 口径时展示全局图，防止旧查询被误标为人数。
+
+旋转广度校验更新
+  202610220001_rotation_characters.sql 为后端校验补充 ?，不改动已有成绩。
+  已由用户确认在生产项目执行，并记录在 manual-baseline.json。
+
+任务设计资料
+  空间更新：https://pmc.ncbi.nlm.nih.gov/articles/PMC9313590/
+  数字更新：https://www.sciencedirect.com/science/article/pii/S0022249622000487
+  多路末尾记忆：https://englelab.gatech.edu/articles/2010/broadway-engle-2010.pdf

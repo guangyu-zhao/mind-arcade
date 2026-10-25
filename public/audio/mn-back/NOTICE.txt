@@ -1,0 +1,9 @@
+A-Z Vocalized — Mike Koenig / SoundBible.com
+Source: https://soundbible.com/2009-A-Z-Vocalized.html
+License: Creative Commons Attribution 3.0 Unported
+https://creativecommons.org/licenses/by/3.0/
+
+Adapted for Mind Arcade: split into A–Z letter names, trimmed silence,
+converted to mono, and placed into 26 one-second slots in alphabetic order.
+The alternate final pronunciation of Z is omitted.
+The recording is used under its attribution license; no endorsement is implied.

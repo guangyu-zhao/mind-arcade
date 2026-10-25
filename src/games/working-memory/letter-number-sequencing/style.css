@@ -1,0 +1,338 @@
+@charset "UTF-8";
+:root {
+  color-scheme: light;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-synthesis: none;
+  -webkit-font-smoothing: antialiased;
+  font-size: 16px;
+  line-height: 1.5;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+}
+button,
+input {
+  font: inherit;
+}
+button,
+a,
+input,
+summary {
+  -webkit-tap-highlight-color: transparent;
+}
+button,
+summary {
+  cursor: pointer;
+  touch-action: manipulation;
+}
+button:disabled {
+  cursor: default;
+}
+button:focus-visible,
+a:focus-visible,
+summary:focus-visible,
+input:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 4px;
+}
+[hidden] {
+  display: none !important;
+}
+#response-count {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+noscript {
+  display: block;
+  margin-top: 20px;
+}
+:root {
+  color: #332e3d;
+  background: #f6f6f9;
+  --accent: #69558f;
+  --accent-dark: #564478;
+  --muted: #70667d;
+  --line: #e4dfeb;
+  --soft: #f0edf6;
+}
+.memory-stage {
+  min-height: 410px;
+  display: grid;
+  align-items: center;
+  padding: 18px 0;
+}
+.stage-view {
+  min-width: 0;
+  width: 100%;
+}
+.idle-content,
+.result-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0;
+}
+.idle-samples {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+.preview-tile {
+  width: 63px;
+  height: 73px;
+  display: grid;
+  place-items: center;
+  border-radius: 15px;
+}
+.idle-content h2,
+.result-content h2 {
+  font-weight: 500;
+}
+.idle-content > p,
+.result-content > p {
+  margin: 12px 0 0;
+}
+.study-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  place-items: center;
+  min-height: 300px;
+  max-width: 540px;
+  margin: 0 auto;
+}
+.recall-content {
+  margin: 0 auto;
+  max-width: 500px;
+}
+.answer-slots {
+  display: grid;
+  grid-template-columns: repeat(var(--answer-columns, 2), minmax(0, 1fr));
+  gap: 6px;
+  margin: 0 auto 32px;
+  width: fit-content;
+  max-width: 100%;
+}
+.answer-slot,
+.review-card {
+  width: 49px;
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  border-radius: 7px;
+  border: 1px dashed #dcd3e5;
+  background: #fbf9fd;
+}
+.answer-slot.answered {
+  border-style: solid;
+  border-color: #ddd0e8;
+  background: #f3edf9;
+}
+.empty-slot {
+  font-size: 20px;
+}
+.wrong-choice {
+  background: #f8e7e6 !important;
+  border-color: #d99792 !important;
+}
+.correct-answer {
+  display: grid;
+  grid-template-columns: repeat(var(--answer-columns, 2), minmax(0, 1fr));
+  justify-content: center;
+  gap: 8px;
+  margin: 0 auto;
+  width: fit-content;
+  max-width: 100%;
+}
+.review-card {
+  border-style: solid;
+  background: #f6f0fa;
+}
+.character-glyph {
+  display: block;
+  font-family:
+    'Avenir Next',
+    'Segoe UI',
+    -apple-system,
+    sans-serif;
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+  color: #635274;
+}
+.study-grid > .character-glyph {
+  font-size: 140px;
+  font-weight: 450;
+  line-height: 1;
+}
+.preview-tile .character-glyph {
+  font-size: 32px;
+}
+.answer-slot .character-glyph,
+.review-card .character-glyph {
+  font-size: 24px;
+}
+.keypad {
+  display: grid;
+  gap: 18px;
+}
+.keyboard-row {
+  display: grid;
+  grid-template-columns: repeat(9, minmax(0, 1fr));
+  gap: 5px;
+}
+.character-key {
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  min-height: 49px;
+  padding: 0;
+  border: 1px solid #e1d8e9;
+  border-radius: 7px;
+  background: #f7f2fb;
+}
+.character-key:not(:disabled):hover {
+  background: #eee5f6;
+  border-color: #b5a0c9;
+}
+.character-key.picked {
+  animation: picked 0.18s ease-out;
+}
+.idle-content h2,
+.result-content h2 {
+  color: var(--accent);
+  font-size: 26px;
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+.idle-content > p,
+.result-content > p {
+  color: var(--muted);
+  font-size: 17px;
+  line-height: 1.7;
+}
+.idle-samples {
+  margin-bottom: 24px;
+}
+.preview-tile {
+  background: var(--soft);
+}
+.review-label {
+  margin: 26px 0 14px;
+  font-size: 16px;
+  color: var(--muted);
+}
+.empty-slot {
+  color: var(--muted);
+}
+.character-key .character-glyph {
+  font-size: 24px;
+}
+@media (min-width: 901px) and (max-width: 1080px) {
+  .keyboard-row {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+@keyframes picked {
+  0%,
+  45% {
+    background: #ded5ee;
+  }
+  100% {
+    background: #f7f2fb;
+  }
+}
+@media (max-width: 900px) {
+  .memory-stage {
+    min-height: 350px;
+  }
+}
+@media (max-width: 540px) {
+  .idle-samples {
+    gap: 10px;
+  }
+  .idle-content h2,
+  .result-content h2 {
+    font-size: 23px;
+  }
+  .idle-content > p,
+  .result-content > p {
+    font-size: 16px;
+  }
+  .answer-slot,
+  .review-card {
+    width: clamp(32px, 9vw, 49px);
+  }
+  .answer-slots,
+  .correct-answer {
+    gap: 5px;
+  }
+  .preview-tile {
+    width: 50px;
+    height: 60px;
+  }
+  .study-grid {
+    min-height: 260px;
+  }
+  .study-grid > .character-glyph {
+    font-size: 116px;
+  }
+  .keyboard-row {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+  .character-key {
+    min-height: 48px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.sequence-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin: 0 auto 20px;
+  color: var(--muted);
+  font-size: 16px;
+  font-variant-numeric: tabular-nums;
+}
+.sequence-pagination button {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--accent);
+  font-size: 24px;
+}
+.sequence-pagination button:disabled {
+  opacity: 0.35;
+}
+.sequence-pagination button:focus-visible {
+  outline-offset: -4px;
+}
+.result-content .sequence-pagination {
+  margin: 16px auto 0;
+}
+.recall-content.paged .answer-slots {
+  margin-bottom: 10px;
+}
+.page-placeholder {
+  visibility: hidden;
+  pointer-events: none;
+}

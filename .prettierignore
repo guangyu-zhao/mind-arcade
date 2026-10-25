@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.generated/
+_site/
+public/
+supabase/migrations/
+test-results/
+playwright-report/
+package-lock.json
+test-results-built/

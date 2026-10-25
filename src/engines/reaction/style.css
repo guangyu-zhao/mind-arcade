@@ -1,0 +1,63 @@
+:root {
+  --accent: #4c6988;
+  --accent-dark: #38536e;
+  --soft: #edf2f7;
+  --line: #dfe6ed;
+  --muted: #647386;
+}
+
+.help p {
+  line-height: 1.65;
+}
+.stimulus {
+  height: 180px;
+  font-size: 76px;
+  font-weight: 550;
+  font-variant-numeric: tabular-nums;
+}
+.stimulus .counter {
+  color: #ba394b;
+  font-size: 72px;
+}
+.stimulus .fixation {
+  color: #8795a5;
+  font-size: 36px;
+}
+.stimulus svg {
+  width: 112px;
+  height: 112px;
+}
+
+#idle-sample {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+#idle-sample > span {
+  display: flex;
+}
+#idle-sample svg {
+  max-width: 100%;
+}
+.answer-options.single {
+  grid-template-columns: 1fr;
+}
+.answer-options button {
+  touch-action: none;
+}
+.answer-options button:disabled {
+  opacity: 0.5;
+}
+.result-score strong {
+  font-size: 64px;
+}
+
+@media (max-width: 540px) {
+  .stimulus {
+    height: 155px;
+  }
+  .result-score strong {
+    font-size: 54px;
+  }
+}
