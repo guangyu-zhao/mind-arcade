@@ -3,6 +3,7 @@ import { gamesById } from '../../src/catalog.js';
 import { fixturePage, signedIn } from './helpers.js';
 import {
   DEFAULTS,
+  EXPOSURE_MS,
   CHANNELS,
   responseWindow,
 } from '../../src/games/working-memory/mn-back/rules.js';
@@ -32,7 +33,7 @@ async function begin(page) {
   await expect(page.locator('.mn-cell.lit')).toHaveCount(1);
 }
 async function blank(page) {
-  await page.clock.fastForward(1000);
+  await page.clock.fastForward(EXPOSURE_MS);
   for (let i = 0; i < 5 && (await page.locator('.mn-cell.lit').count()); i++)
     await page.clock.runFor(16);
   await expect(page.locator('.mn-cell.lit')).toHaveCount(0);
@@ -51,6 +52,25 @@ const saved = (page) =>
       .filter((key) => key.startsWith('mind-arcade.records.mn-back:'))
       .map((key) => JSON.parse(localStorage.getItem(key)).record),
   );
+
+for (const m of [1, 2, 3, 4])
+  test(`N-back gives ${m} channels a (M+1)/3-second blank response window`, async ({ page }) => {
+    const rules = { ...DEFAULTS, shape: m >= 2, color: m >= 3, sound: m === 4 };
+    await setup(page, rules);
+    await begin(page);
+    await blank(page);
+    const windowMs = ((m + 1) / 3) * 1000;
+    await page.clock.runFor(Math.floor(windowMs / 2));
+    await expect(page.locator('#round-counter')).toHaveText('1 / 1');
+    const progress = Number(await page.locator('#response-progress').getAttribute('aria-valuenow'));
+    expect(progress).toBeGreaterThanOrEqual(46);
+    expect(progress).toBeLessThanOrEqual(54);
+    await page.clock.runFor(Math.floor(windowMs / 2) - 50);
+    await expect(page.locator('#round-counter')).toHaveText('1 / 1');
+    await page.clock.runFor(80);
+    await expect(page.locator('#round-counter')).toHaveText('1 / 30');
+    await expect(page.locator('.mn-cell.lit')).toHaveCount(1);
+  });
 
 test('N-back completes N warm-ups plus 30 judgments, pools matches and syncs fractional F1', async ({
   page,
@@ -97,16 +117,16 @@ test('N-back completes N warm-ups plus 30 judgments, pools matches and syncs fra
   await expect(page.locator('[name=position]')).toBeDisabled();
 });
 
-test('N-back exposes a full one-second item, keeps response toggles through the blank window, and scores no answers as zero', async ({
+test('N-back exposes a full 400 ms item, keeps response toggles through the blank window, and scores no answers as zero', async ({
   page,
 }) => {
   await setup(page);
   await begin(page);
-  await page.clock.runFor(900);
+  await page.clock.runFor(350);
   await expect(page.locator('.mn-cell.lit')).toHaveCount(1);
-  await page.clock.runFor(200);
+  await page.clock.runFor(80);
   await expect(page.locator('.mn-cell.lit')).toHaveCount(0);
-  await page.clock.runFor(1500);
+  await next(page, DEFAULTS);
   await expect(page.locator('#round-counter')).toHaveText('1 / 30');
   const button = page.locator('[data-channel=position]');
   await button.click();
@@ -192,25 +212,25 @@ test('N-back audio loads all 26 clips and an unavailable recording never creates
   await setup(page, { ...DEFAULTS, sound: true });
   const duration = await page.evaluate(async () => {
     const ctx = new AudioContext(),
-      response = await fetch('../../audio/mn-back/letters.mp3'),
+      response = await fetch('../../audio/mn-back/letters-400ms.mp3'),
       buffer = await ctx.decodeAudioData(await response.arrayBuffer());
     const durations = Array.from({ length: 26 }, (_, i) =>
       buffer
         .getChannelData(0)
-        .slice(i * buffer.sampleRate, (i + 1) * buffer.sampleRate)
+        .slice((i * buffer.sampleRate * 400) / 1000, ((i + 1) * buffer.sampleRate * 400) / 1000)
         .some((value) => Math.abs(value) > 0.01),
     );
     await ctx.close();
     return { seconds: buffer.duration, active: durations };
   });
-  expect(duration.seconds).toBeCloseTo(26, 1);
+  expect(duration.seconds).toBeCloseTo(10.4, 2);
   expect(duration.active.every(Boolean)).toBeTruthy();
-  await page.route('**/audio/mn-back/letters.mp3', (route) => route.abort());
+  await page.route('**/audio/mn-back/letters-400ms.mp3', (route) => route.abort());
   await page.locator('#action').click();
   await expect(page.locator('#result-note')).toContainText('声音未能播放');
   await expect(page.locator('body')).not.toHaveClass(/running/);
   expect(await saved(page)).toEqual([]);
-  await page.unroute('**/audio/mn-back/letters.mp3');
+  await page.unroute('**/audio/mn-back/letters-400ms.mp3');
   await begin(page);
   await expect(page.locator('#responses button')).toHaveCount(2);
   await page.locator('#action').click();

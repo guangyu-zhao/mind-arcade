@@ -664,7 +664,7 @@
   "mn.response-time": "Verbleibende Antwortzeit",
   "mn.matching-channels": "Passende Reizarten auswählen",
   "mn.instructions": "Jede aktivierte Reizart mit N Reizen zuvor vergleichen. Alle Übereinstimmungen auswählen; sonst nichts. Position bleibt aktiv. M zählt die aktivierten Reizarten.",
-  "mn.toggle-help": "Jeder Reiz erscheint 1 Sekunde, danach bleiben M + 0,5 Sekunden. Anklicken wählt aus oder ab; am Ende des Balkens wird gewertet. Audio: englische Buchstabennamen A–Z.",
+  "mn.toggle-help": "Jeder Reiz erscheint 400 ms, danach bleiben (M + 1)/3 Sekunden. Anklicken wählt aus oder ab; am Ende des Balkens wird gewertet. Audio: englische Buchstabennamen A–Z.",
   "mn.scoring-help": "Gemeinsame Wertung aller Reizarten: F1 = 2 × Treffer ÷ (2 × Treffer + Fehlalarme + Auslassungen). In Prozent; höher ist besser. Ohne Auswahl: 0.",
   "mn.audio-credit": "Quelle der Buchstabenaufnahmen",
   "mn.memorize": "Merken",

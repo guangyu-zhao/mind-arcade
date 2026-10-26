@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   DEFAULTS,
+  EXPOSURE_MS,
   VERSION,
   CHANNELS,
   activeChannels,
@@ -38,7 +39,7 @@ function recordFor(rules = { ...DEFAULTS }) {
   const trials = sequence.map((stimulus, index) => ({
     stimulus,
     responses: matchingChannels(sequence, index, rules),
-    exposureMs: 1000,
+    exposureMs: EXPOSURE_MS,
     responseMs,
   }));
   return {
@@ -46,13 +47,14 @@ function recordFor(rules = { ...DEFAULTS }) {
     endedAt: '2026-10-25T10:00:00Z',
     meta: meta(rules),
     reason: 'complete',
-    elapsedMs: sequence.length * (1000 + responseMs),
+    elapsedMs: sequence.length * (EXPOSURE_MS + responseMs),
     score: 100,
     trials,
   };
 }
 
 test('N-back covers all 240 grid, N and channel combinations with 30 scored trials', () => {
+  assert.equal(EXPOSURE_MS, 400);
   for (let size = 3; size <= 7; size++)
     for (let n = 1; n <= 6; n++)
       for (let mask = 0; mask < 8; mask++) {
@@ -66,7 +68,7 @@ test('N-back covers all 240 grid, N and channel combinations with 30 scored tria
           record = recordFor(rules),
           channels = activeChannels(rules);
         assert.equal(record.trials.length, n + 30);
-        assert.equal(responseWindow(rules), (channels.length + 0.5) * 1000);
+        assert.equal(responseWindow(rules), Math.round(((channels.length + 1) * 1000) / 3));
         for (const key of CHANNELS) {
           assert.ok(
             record.trials.every(({ stimulus }) =>
@@ -129,13 +131,16 @@ test('record validation rejects incomplete, altered, duplicate and out-of-window
       r.trials[2].stimulus.color = 1;
     },
     (r) => {
-      r.trials[2].exposureMs = 999;
+      r.trials[2].exposureMs = EXPOSURE_MS - 1;
     },
     (r) => {
-      r.trials[2].responseMs = 1499;
+      r.trials[2].exposureMs = EXPOSURE_MS + 126;
     },
     (r) => {
-      r.trials[2].responseMs = 1626;
+      r.trials[2].responseMs = responseWindow(r.meta.rules) - 1;
+    },
+    (r) => {
+      r.trials[2].responseMs = responseWindow(r.meta.rules) + 126;
     },
     (r) => {
       r.trials[2].responseMs = NaN;

@@ -21,10 +21,10 @@ begin
       elsif i>=n then v := mod(v+1,limit_value); end if;
       stimulus := jsonb_set(stimulus,array[channel],to_jsonb(v));
     end loop;
-    trials := trials || jsonb_build_object('stimulus',stimulus,'responses',responses,'exposureMs',1000,'responseMs',cardinality(channels)*1000+500);
+    trials := trials || jsonb_build_object('stimulus',stimulus,'responses',responses,'exposureMs',400,'responseMs',round((cardinality(channels)+1)*1000.0/3));
   end loop;
-  return jsonb_build_object('id','nback-test','endedAt',now(),'meta',jsonb_build_object('rulesVersion','mn-back-20261025','rules',rules),
-    'reason','complete','score',100,'elapsedMs',(n+30)*(1500+cardinality(channels)*1000),'trials',trials);
+  return jsonb_build_object('id','nback-test','endedAt',now(),'meta',jsonb_build_object('rulesVersion','mn-back-20261027','rules',rules),
+    'reason','complete','score',100,'elapsedMs',(n+30)*(400+round((cardinality(channels)+1)*1000.0/3)),'trials',trials);
 end;
 $$;
 
@@ -64,9 +64,11 @@ from fixture cross join (values
   (array['trials','1','stimulus','position'],'9'::jsonb,'invalid_trial','position must be on the board'),
   (array['trials','1','stimulus','color'],'0'::jsonb,'invalid_trial','inactive stimulus must be null'),
   (array['trials','1','stimulus','position'],'1'::jsonb,'invalid_targets','cannot change the target frequency'),
-  (array['trials','1','exposureMs'],'999'::jsonb,'invalid_duration','stimulus must be shown for one second'),
-  (array['trials','1','responseMs'],'1499'::jsonb,'invalid_duration','full response window is required'),
-  (array['trials','1','responseMs'],'1626'::jsonb,'invalid_duration','interrupted timer cannot be saved'),
+  (array['trials','1','exposureMs'],'399'::jsonb,'invalid_duration','stimulus must be shown for 400 milliseconds'),
+  (array['trials','1','exposureMs'],'526'::jsonb,'invalid_duration','overlong stimulus cannot be saved'),
+  (array['trials','1','exposureMs'],'1000'::jsonb,'invalid_duration','old one-second timing is rejected'),
+  (array['trials','1','responseMs'],'666'::jsonb,'invalid_duration','full response window is required'),
+  (array['trials','1','responseMs'],'793'::jsonb,'invalid_duration','interrupted timer cannot be saved'),
   (array['trials','1','responseMs'],'null'::jsonb,'invalid_duration','duration cannot be null'),
   (array['elapsedMs'],'1'::jsonb,'invalid_duration','total time must match trials')) as invalid(path,value,error,description);
 
@@ -78,8 +80,8 @@ set local role authenticated;
 select set_config('request.jwt.claim.sub','00000000-0000-4000-8000-000000000031',true);
 select lives_ok(format('select public.ml_submit(%L,%L,%L)','mn-back',
   jsonb_set(jsonb_set(record,'{trials,1,responses}','[]'),'{score}','94.12'),'00000000-0000-4000-8000-000000000031'),'accepts fractional F1 through the public endpoint') from fixture;
-select is((public.ml_dashboard('mn-back','mn-back-20261025',rules,'score')->'history'->0->>'value')::numeric,94.12::numeric,'dashboard preserves fractional F1') from fixture;
-select is(jsonb_array_length(public.ml_dashboard('mn-back','mn-back-20261025',jsonb_set(rules,'{n}','2'),'score')->'history'),0,'another N has separate statistics') from fixture;
+select is((public.ml_dashboard('mn-back','mn-back-20261027',rules,'score')->'history'->0->>'value')::numeric,94.12::numeric,'dashboard preserves fractional F1') from fixture;
+select is(jsonb_array_length(public.ml_dashboard('mn-back','mn-back-20261027',jsonb_set(rules,'{n}','2'),'score')->'history'),0,'another N has separate statistics') from fixture;
 select throws_ok(format('select public.ml_submit(%L,%L,%L)','mn-back',jsonb_set(jsonb_set(record,'{id}','"forged-score"'),'{score}','99.99'),
   '00000000-0000-4000-8000-000000000031'),'P0001','invalid_score','server recomputes F1 instead of trusting the submitted score') from fixture;
 reset role;

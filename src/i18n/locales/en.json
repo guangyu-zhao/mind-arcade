@@ -664,7 +664,7 @@
   "mn.response-time": "Response time remaining",
   "mn.matching-channels": "Select matching channels",
   "mn.instructions": "Judge each enabled channel against N items earlier. Select all matches; select nothing if none match. Position is always enabled. M is the number of enabled channels.",
-  "mn.toggle-help": "Each item appears for 1 second, followed by M + 0.5 seconds to respond. Click to select or deselect; answers submit when the bar runs out. Audio always uses English letter names A–Z.",
+  "mn.toggle-help": "Each item appears for 400 ms, followed by (M + 1)/3 seconds to respond. Click to select or deselect; answers submit when the bar runs out. Audio always uses English letter names A–Z.",
   "mn.scoring-help": "Channels are scored together: F1 = 2 × hits ÷ (2 × hits + false alarms + misses). Shown as a percentage; higher is better. No selections score 0.",
   "mn.audio-credit": "Letter recording credits",
   "mn.memorize": "Memorize",

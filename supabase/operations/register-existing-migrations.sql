@@ -8,7 +8,7 @@ begin
       ('mind_lab_private.condition_id','478fcc612cf0aa9dde56dc74184baeaa'),
       ('mind_lab_private.valid_integer','c6d09b35cdf7bff53eb25f4dcb651f66'),
       ('mind_lab_private.level_pass','68521b63d586fbd7e1ff0c0c6a845fb9'),
-      ('mind_lab_private.mn_back_score','3e464665960aec451298dd3067267c3e'),
+      ('mind_lab_private.mn_back_score','151214a7270cb082e5b7deb4d453ec55'),
       ('public.ml_submit','269d022c53401ebe391418e60b21ce71'),
       ('mind_lab_private.histogram','70700c062b65d5ab522aab95e9d9b823')
     ) as expected(name,hash)
@@ -37,7 +37,8 @@ insert into supabase_migrations.schema_migrations(version,name,statements) value
  ('202610230001','validate_judgment_counts',array[]::text[]),
  ('202610230002','validate_updating_tracking',array[]::text[]),
  ('202610250001','validate_symmetry_plus_settings',array[]::text[]),
- ('202610250002','mn_back',array[]::text[])
+ ('202610250002','mn_back',array[]::text[]),
+ ('202610270001','mn_back_timing',array[]::text[])
 on conflict (version) do nothing;
 insert into supabase_migrations.schema_migrations(version,name,statements)
   select '202610170003','population_recent_five',array[]::text[] from pg_proc

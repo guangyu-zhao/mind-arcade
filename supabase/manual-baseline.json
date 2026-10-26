@@ -51,6 +51,11 @@
       "version": "202610250002",
       "file": "202610250002_mn_back.sql",
       "sha256": "2abb0b8d7dabcd7f5a50fd856ee4b1eb4b34088061a8f4f9b422a21730f93e49"
+    },
+    {
+      "version": "202610270001",
+      "file": "202610270001_mn_back_timing.sql",
+      "sha256": "e327b439842f397885f2d1e587c476482f4afc4388e23197913cfa324e21db64"
     }
   ]
 }

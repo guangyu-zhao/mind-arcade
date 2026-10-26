@@ -2,8 +2,8 @@ export const CHANNELS = Object.freeze(['position', 'sound', 'shape', 'color']);
 export const DEFAULTS = Object.freeze({ size: 3, n: 1, sound: false, shape: false, color: false });
 export const SCORED_TRIALS = 30;
 export const MATCHES_PER_CHANNEL = 9;
-export const EXPOSURE_MS = 1000;
-export const VERSION = 'mn-back-20261025';
+export const EXPOSURE_MS = 400;
+export const VERSION = 'mn-back-20261027';
 export const trialCount = (rules) => rules.n + SCORED_TRIALS;
 
 export function readRules(value) {
@@ -30,7 +30,8 @@ export function readRules(value) {
 }
 
 export const activeChannels = (rules) => CHANNELS.filter((key) => key === 'position' || rules[key]);
-export const responseWindow = (rules) => (activeChannels(rules).length + 0.5) * 1000;
+export const responseWindow = (rules) =>
+  Math.round(((activeChannels(rules).length + 1) * 1000) / 3);
 export const choices = (rules, channel) =>
   ({ position: rules.size ** 2, sound: 26, shape: 9, color: 8 })[channel];
 export const f1Score = ({ hits, falseAlarms, misses }) => {

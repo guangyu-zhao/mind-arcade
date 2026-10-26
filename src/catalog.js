@@ -27,7 +27,7 @@ export const games = [
     name: 'mn.title',
     description: 'mn.description',
     icon: 'mn-back',
-    version: 'mn-back-20261025',
+    version: 'mn-back-20261027',
     kind: 'nback',
     metric: { id: 'score', unit: '%', decimals: 2, label: 'mn.f1-score' },
     config: {},

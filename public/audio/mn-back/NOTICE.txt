@@ -4,6 +4,7 @@ License: Creative Commons Attribution 3.0 Unported
 https://creativecommons.org/licenses/by/3.0/
 
 Adapted for Mind Arcade: split into A–Z letter names, trimmed silence,
-converted to mono, and placed into 26 one-second slots in alphabetic order.
+converted to mono, time-compressed without changing pitch, and placed into
+26 400-millisecond slots in alphabetic order.
 The alternate final pronunciation of Z is omitted.
 The recording is used under its attribution license; no endorsement is implied.

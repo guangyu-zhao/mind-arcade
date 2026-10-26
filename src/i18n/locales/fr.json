@@ -664,7 +664,7 @@
   "mn.response-time": "Temps de réponse restant",
   "mn.matching-channels": "Sélectionner les stimuli identiques",
   "mn.instructions": "Comparez chaque type de stimulus à celui présenté N étapes avant. Sélectionnez toutes les correspondances, ou rien si aucune. La position reste active. M est le nombre de types activés.",
-  "mn.toggle-help": "Chaque stimulus apparaît 1 seconde, puis vous disposez de M + 0,5 secondes. Cliquez pour sélectionner ou désélectionner ; les choix sont validés à la fin de la barre. Audio : lettres A–Z en anglais.",
+  "mn.toggle-help": "Chaque stimulus apparaît 400 ms, puis vous disposez de (M + 1)/3 secondes. Cliquez pour sélectionner ou désélectionner ; les choix sont validés à la fin de la barre. Audio : lettres A–Z en anglais.",
   "mn.scoring-help": "Score global : F1 = 2 × détections ÷ (2 × détections + fausses alertes + omissions). En pourcentage ; plus il est élevé, mieux c’est. Aucun choix donne 0.",
   "mn.audio-credit": "Crédits des enregistrements",
   "mn.memorize": "Mémorisez",
