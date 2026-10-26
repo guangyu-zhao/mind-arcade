@@ -4,9 +4,7 @@ import { currentGame } from '../../src/catalog.js';
 import { createCloudFixture } from './cloud.js';
 const game = currentGame(),
   params = new URLSearchParams(location.search);
-await Promise.all(
-  game.assets.styles.map((style) => import(/* @vite-ignore */ '/mind-arcade/' + style)),
-);
+for (const style of game.assets.styles) await import(/* @vite-ignore */ '/mind-arcade/' + style);
 const fixture = createCloudFixture();
 const service = bootstrap({
   cloud: {
