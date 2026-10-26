@@ -15,7 +15,8 @@ export function createLetterAudio() {
         })
         .then((data) => context.decodeAudioData(data))
         .then((decoded) => {
-          if (decoded.duration < (26 * EXPOSURE_MS) / 1000) throw Error('audio_incomplete');
+          const requiredSamples = Math.round((26 * EXPOSURE_MS * decoded.sampleRate) / 1000);
+          if (decoded.length + 1 < requiredSamples) throw Error('audio_incomplete');
           buffer = decoded;
         })
         .catch((error) => {

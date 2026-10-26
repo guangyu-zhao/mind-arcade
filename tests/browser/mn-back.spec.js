@@ -206,35 +206,44 @@ test('N-back cancels stalled presentation without saving and can restart', async
   expect(await saved(page)).toEqual([]);
 });
 
-test('N-back audio loads all 26 clips and an unavailable recording never creates a silent scored game', async ({
-  page,
-}) => {
-  await setup(page, { ...DEFAULTS, sound: true });
-  const duration = await page.evaluate(async () => {
-    const ctx = new AudioContext(),
-      response = await fetch('../../audio/mn-back/letters-400ms.mp3'),
-      buffer = await ctx.decodeAudioData(await response.arrayBuffer());
-    const durations = Array.from({ length: 26 }, (_, i) =>
-      buffer
-        .getChannelData(0)
-        .slice((i * buffer.sampleRate * 400) / 1000, ((i + 1) * buffer.sampleRate * 400) / 1000)
-        .some((value) => Math.abs(value) > 0.01),
-    );
-    await ctx.close();
-    return { seconds: buffer.duration, active: durations };
+for (const sampleRate of [44100, 48000])
+  test(`N-back audio loads all 26 clips at ${sampleRate} Hz and never creates a silent scored game`, async ({
+    page,
+  }) => {
+    await page.addInitScript((sampleRate) => {
+      const NativeAudioContext = window.AudioContext;
+      window.AudioContext = class extends NativeAudioContext {
+        constructor(options) {
+          super({ ...options, sampleRate });
+        }
+      };
+    }, sampleRate);
+    await setup(page, { ...DEFAULTS, sound: true });
+    const duration = await page.evaluate(async () => {
+      const ctx = new AudioContext(),
+        response = await fetch('../../audio/mn-back/letters-400ms.mp3'),
+        buffer = await ctx.decodeAudioData(await response.arrayBuffer());
+      const durations = Array.from({ length: 26 }, (_, i) =>
+        buffer
+          .getChannelData(0)
+          .slice((i * buffer.sampleRate * 400) / 1000, ((i + 1) * buffer.sampleRate * 400) / 1000)
+          .some((value) => Math.abs(value) > 0.01),
+      );
+      await ctx.close();
+      return { seconds: buffer.duration, active: durations };
+    });
+    expect(duration.seconds).toBeCloseTo(10.4, 2);
+    expect(duration.active.every(Boolean)).toBeTruthy();
+    await page.route('**/audio/mn-back/letters-400ms.mp3', (route) => route.abort());
+    await page.locator('#action').click();
+    await expect(page.locator('#result-note')).toContainText('声音未能播放');
+    await expect(page.locator('body')).not.toHaveClass(/running/);
+    expect(await saved(page)).toEqual([]);
+    await page.unroute('**/audio/mn-back/letters-400ms.mp3');
+    await begin(page);
+    await expect(page.locator('#responses button')).toHaveCount(2);
+    await page.locator('#action').click();
   });
-  expect(duration.seconds).toBeCloseTo(10.4, 2);
-  expect(duration.active.every(Boolean)).toBeTruthy();
-  await page.route('**/audio/mn-back/letters-400ms.mp3', (route) => route.abort());
-  await page.locator('#action').click();
-  await expect(page.locator('#result-note')).toContainText('声音未能播放');
-  await expect(page.locator('body')).not.toHaveClass(/running/);
-  expect(await saved(page)).toEqual([]);
-  await page.unroute('**/audio/mn-back/letters-400ms.mp3');
-  await begin(page);
-  await expect(page.locator('#responses button')).toHaveCount(2);
-  await page.locator('#action').click();
-});
 
 test('N-back scale shrinks the occupied board space, and settings persist with translated labels', async ({
   page,
